@@ -57,27 +57,21 @@ public class UsersModuleInstaller : IUsersModuleInstaller
 
         // Register repositories
         services.AddScoped<IUserRepository, UserRepository>();
-        services.AddScoped<IUserMetricsRepository, UserMetricsRepository>();
 
     // Inbox repository is not wired in this template for EF Core; add as needed.
 
         // Register MediatR handlers
         services.AddScoped<IRequestHandler<LoginWithGoogleCommand, Result<LoginResponseDto>>, LoginWithGoogleCommandHandler>();
         services.AddScoped<IRequestHandler<UpdateUserProfileCommand, Result<UserDto>>, UpdateUserProfileCommandHandler>();
-        services.AddScoped<IRequestHandler<AddUserMetricCommand, Result<UserMetricDto>>, AddUserMetricCommandHandler>();
         services.AddScoped<IRequestHandler<GetUserByIdQuery, Result<UserDto>>, GetUserByIdQueryHandler>();
         services.AddScoped<IRequestHandler<GetUserProfileQuery, Result<UserDto>>, GetUserProfileQueryHandler>();
-        services.AddScoped<IRequestHandler<GetLatestUserMetricQuery, Result<UserMetricDto>>, GetLatestUserMetricQueryHandler>();
-        services.AddScoped<IRequestHandler<GetUserMetricsQuery, Result<IEnumerable<UserMetricDto>>>, GetUserMetricsQueryHandler>();
 
         // Register validators
         services.AddScoped<IValidator<LoginWithGoogleCommand>, LoginWithGoogleCommandValidator>();
         services.AddScoped<IValidator<UpdateUserProfileCommand>, UpdateUserProfileCommandValidator>();
-        services.AddScoped<IValidator<AddUserMetricCommand>, AddUserMetricCommandValidator>();
 
         // Register Mapperly mappers - they will be generated as implementations
         services.AddScoped<UserMapper>();
-        services.AddScoped<UserMetricMapper>();
 
         // Register the installer itself so it can be resolved
         services.AddSingleton<IUsersModuleInstaller, UsersModuleInstaller>();
