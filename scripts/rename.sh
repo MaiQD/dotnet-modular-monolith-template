@@ -38,6 +38,59 @@ if [[ -d "src/${OLD_SOLUTION_DIR}" && "${OLD_SOLUTION_DIR}" != "${NEW_SOLUTION_N
   git mv "src/${OLD_SOLUTION_DIR}" "src/${NEW_SOLUTION_NAME}" || mv "src/${OLD_SOLUTION_DIR}" "src/${NEW_SOLUTION_NAME}"
 fi
 
+# Helper to prefer git mv when possible
+try_git_mv() {
+  local src="$1" dst="$2"
+  if command -v git >/dev/null 2>&1; then
+    git mv "$src" "$dst" 2>/dev/null || mv "$src" "$dst"
+  else
+    mv "$src" "$dst"
+  fi
+}
+
+# Determine solution dir after potential rename
+TARGET_SOLUTION_DIR="src/${NEW_SOLUTION_NAME}"
+[[ -d "${TARGET_SOLUTION_DIR}" ]] || TARGET_SOLUTION_DIR="src/${OLD_SOLUTION_DIR}"
+
+# Rename the .sln file to <NEW_NS>.sln for a generic template name
+CURRENT_SOLUTION_FILE="$(find "${TARGET_SOLUTION_DIR}" -maxdepth 1 -name "*.sln" | head -n1 || true)"
+if [[ -n "${CURRENT_SOLUTION_FILE}" ]]; then
+  TARGET_SOLUTION_FILE="${TARGET_SOLUTION_DIR}/${NEW_NS}.sln"
+  if [[ "${CURRENT_SOLUTION_FILE}" != "${TARGET_SOLUTION_FILE}" ]]; then
+    try_git_mv "${CURRENT_SOLUTION_FILE}" "${TARGET_SOLUTION_FILE}"
+  fi
+  # Rename Rider/R# settings alongside, if present
+  if [[ -f "${CURRENT_SOLUTION_FILE}.DotSettings.user" ]]; then
+    try_git_mv "${CURRENT_SOLUTION_FILE}.DotSettings.user" "${TARGET_SOLUTION_FILE}.DotSettings.user"
+  fi
+fi
+
+# Rename top-level project directories from <OldNs>.* => <NEW_NS>.* (idempotent)
+while IFS= read -r -d '' DIR; do
+  BASENAME="$(basename "${DIR}")"
+  if [[ "${BASENAME}" =~ ^([A-Za-z0-9_]+)\.(.+)$ ]]; then
+    OLD_PREFIX="${BASH_REMATCH[1]}"
+    REST="${BASH_REMATCH[2]}"
+    if [[ "${OLD_PREFIX}" != "${NEW_NS}" ]]; then
+      NEW_BASENAME="${NEW_NS}.${REST}"
+      try_git_mv "${DIR}" "$(dirname "${DIR}")/${NEW_BASENAME}"
+    fi
+  fi
+done < <(find "${TARGET_SOLUTION_DIR}" -maxdepth 2 -mindepth 1 -type d -print0)
+
+# Rename project files (*.csproj, *.http) similarly: <OldNs>.* => <NEW_NS>.*
+while IFS= read -r -d '' FILE; do
+  BASENAME="$(basename "${FILE}")"
+  if [[ "${BASENAME}" =~ ^([A-Za-z0-9_]+)\.(.+)$ ]]; then
+    OLD_PREFIX="${BASH_REMATCH[1]}"
+    REST="${BASH_REMATCH[2]}"
+    if [[ "${OLD_PREFIX}" != "${NEW_NS}" ]]; then
+      NEW_BASENAME="${NEW_NS}.${REST}"
+      try_git_mv "${FILE}" "$(dirname "${FILE}")/${NEW_BASENAME}"
+    fi
+  fi
+done < <(find "${TARGET_SOLUTION_DIR}" -type f \( -name "*.csproj" -o -name "*.http" \) -print0)
+
 # Update Docker identifiers (container names, network, DB) in docker-compose.yml
 # Derive a slug from the solution name for Docker resource names
 SOLUTION_SLUG=$(echo "${NEW_SOLUTION_NAME}" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g' | sed -E 's/^-+|-+$//g')

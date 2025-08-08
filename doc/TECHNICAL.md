@@ -1,8 +1,8 @@
-# dotFitness: A Customizable Home Workout Tracker
+# App: A Customizable Home Workout Tracker
 
 ## 1. Introduction
 
-**dotFitness** is a web-based productivity application designed to empower individuals to stay active and achieve their fitness goals from the comfort of their homes. It provides robust tools for customizing workout experiences, tracking progress, and maintaining motivation with minimal external equipment.
+**App** is a web-based productivity application designed to empower individuals to stay active and achieve their fitness goals from the comfort of their homes. It provides robust tools for customizing workout experiences, tracking progress, and maintaining motivation with minimal external equipment.
 
 **Target User:** Individuals seeking to maintain an active lifestyle at home, ranging from beginners to those with some fitness experience, who value structured workouts and clear progress visualization.
 
@@ -10,7 +10,7 @@
 
 ## 2. Application Features (Functional Requirements)
 
-**dotFitness** will offer the following key features:
+**App** will offer the following key features:
 
 - **User Authentication:**
     - Secure user login via **Google OAuth 2.0** for a seamless onboarding experience.
@@ -55,7 +55,7 @@
 
 ## 3. Architectural Design
 
-**dotFitness** will be built as a **Modular Monolith** using **ASP.NET Core** for the backend API and **Vue.js** for the frontend user interface, leveraging **MongoDB** as the database.
+**App** will be built as a **Modular Monolith** using **ASP.NET Core** for the backend API and **Vue.js** for the frontend user interface, leveraging **MongoDB** as the database.
 
 ### 3.1. Architectural Pattern: Modular Monolith
 
@@ -68,54 +68,54 @@
 
 ### 3.2. Project Structure
 
-The Visual Studio solution (`dotFitness.sln`) will contain the following projects:
+The Visual Studio solution (`App.sln`) will contain the following projects:
 
-`dotFitness.sln
-├── dotFitness.Api/                           <-- Main ASP.NET Core Web API entry point
+`App.sln
+├── App.Api/                           <-- Main ASP.NET Core Web API entry point
 │   ├── Program.cs
 │   └── appsettings.json
 │   └── ... global middleware, auth setup, etc.
 │
-├── dotFitness.SharedKernel/                  <-- Core shared components
+├── App.SharedKernel/                  <-- Core shared components
 │   ├── Results/ (Result pattern implementation)
 │   ├── Outbox/ (OutboxMessage model)
 │   ├── Interfaces/ (e.g., IEntity)
 │   └── ... common utilities
 │
-├── dotFitness.Modules.Users.Application/     <-- User module: Public API (Commands, Queries, DTOs, Mappers)
-├── dotFitness.Modules.Users.Domain/          <-- User module: Core business logic, entities (User, UserMetric)
-├── dotFitness.Modules.Users.Infrastructure/  <-- User module: Implementation details (MongoDB repos, Handlers)
-├── dotFitness.Modules.Users.Tests/           <-- User module: Unit tests
+├── App.Modules.Users.Application/     <-- User module: Public API (Commands, Queries, DTOs, Mappers)
+├── App.Modules.Users.Domain/          <-- User module: Core business logic, entities (User, UserMetric)
+├── App.Modules.Users.Infrastructure/  <-- User module: Implementation details (MongoDB repos, Handlers)
+├── App.Modules.Users.Tests/           <-- User module: Unit tests
 │
-├── dotFitness.Modules.Exercises.Application/ <-- Similar structure for Exercises module
-├── dotFitness.Modules.Exercises.Domain/
-├── dotFitness.Modules.Exercises.Infrastructure/
-├── dotFitness.Modules.Exercises.Tests/
+├── App.Modules.Exercises.Application/ <-- Similar structure for Exercises module
+├── App.Modules.Exercises.Domain/
+├── App.Modules.Exercises.Infrastructure/
+├── App.Modules.Exercises.Tests/
 │
-├── dotFitness.Modules.Routines.Application/  <-- Similar structure for Routines module
-├── dotFitness.Modules.Routines.Domain/
-├── dotFitness.Modules.Routines.Infrastructure/
-├── dotFitness.Modules.Routines.Tests/
+├── App.Modules.Routines.Application/  <-- Similar structure for Routines module
+├── App.Modules.Routines.Domain/
+├── App.Modules.Routines.Infrastructure/
+├── App.Modules.Routines.Tests/
 │
-├── dotFitness.Modules.WorkoutLogs.Application/ <-- Similar structure for WorkoutLogs module
-├── dotFitness.Modules.WorkoutLogs.Domain/
-├── dotFitness.Modules.WorkoutLogs.Infrastructure/
-├── dotFitness.Modules.WorkoutLogs.Tests/
+├── App.Modules.WorkoutLogs.Application/ <-- Similar structure for WorkoutLogs module
+├── App.Modules.WorkoutLogs.Domain/
+├── App.Modules.WorkoutLogs.Infrastructure/
+├── App.Modules.WorkoutLogs.Tests/
 │
-├── dotFitness.Modules.Billing.Application/     <-- Billing module: commands/queries/DTOs
-├── dotFitness.Modules.Billing.Domain/          <-- Billing module: entities (Subscription, Plan)
-├── dotFitness.Modules.Billing.Infrastructure/  <-- Billing module: Stripe integration, handlers
-├── dotFitness.Modules.Billing.Tests/           <-- Billing module: unit tests
+├── App.Modules.Billing.Application/     <-- Billing module: commands/queries/DTOs
+├── App.Modules.Billing.Domain/          <-- Billing module: entities (Subscription, Plan)
+├── App.Modules.Billing.Infrastructure/  <-- Billing module: Stripe integration, handlers
+├── App.Modules.Billing.Tests/           <-- Billing module: unit tests
 │
-└── dotFitness.WebUI/                         <-- Vue.js Frontend Application`
+└── App.WebUI/                         <-- Vue.js Frontend Application`
 
 **Project Dependencies:**
 
-- `dotFitness.Api` references all `.Application` projects.
-- `.Infrastructure` projects reference their corresponding `.Domain` and `.Application` projects, and `dotFitness.SharedKernel`.
-- `.Domain` projects reference `dotFitness.SharedKernel`.
-- `.Application` projects reference `dotFitness.SharedKernel`.
-- `.Tests` projects reference the `Application`, `Domain`, `Infrastructure` projects they are testing, and `dotFitness.SharedKernel`.
+- `App.Api` references all `.Application` projects.
+- `.Infrastructure` projects reference their corresponding `.Domain` and `.Application` projects, and `App.SharedKernel`.
+- `.Domain` projects reference `App.SharedKernel`.
+- `.Application` projects reference `App.SharedKernel`.
+- `.Tests` projects reference the `Application`, `Domain`, `Infrastructure` projects they are testing, and `App.SharedKernel`.
 
 ### 3.3. Core Technical Stack
 
@@ -147,7 +147,7 @@ The Visual Studio solution (`dotFitness.sln`) will contain the following project
 ### 4.3. Result Pattern
 
 - **Purpose:** To explicitly handle and communicate outcomes (success or failure) of operations without relying solely on throwing exceptions for expected business rule violations or "not found" scenarios.
-- **Implementation:** `Result` and `Result<TValue>` objects defined in `dotFitness.SharedKernel`.
+- **Implementation:** `Result` and `Result<TValue>` objects defined in `App.SharedKernel`.
     - Methods (especially Command/Query handlers) return `Result<T>` indicating success with a value, or failure with an error message.
 - **Benefits:** Explicit error handling, predictable API for consumers, improved readability, reduced exception overhead.
 
@@ -178,14 +178,14 @@ The Visual Studio solution (`dotFitness.sln`) will contain the following project
 ### 4.8. Structured Logging with Serilog
 
 - **Purpose:** To provide rich, queryable logs for monitoring application behavior, diagnosing issues, and auditing.
-- **Implementation:** Configuring Serilog in the `dotFitness.Api` project, using its structured logging capabilities and various sinks (e.g., Console, File, Azure Application Insights).
+- **Implementation:** Configuring Serilog in the `App.Api` project, using its structured logging capabilities and various sinks (e.g., Console, File, Azure Application Insights).
 - **Benefits:** Easier log analysis, improved observability, faster debugging in production.
 
 ### 4.9. Testing (xUnit.net, Moq, FluentAssertions)
 
 - **Purpose:** To ensure the correctness and reliability of the application's logic through automated testing.
 - **Implementation:**
-    - **xUnit.net:** The primary unit testing framework. Dedicated test projects for each module (`dotFitness.Modules.X.Tests`).
+    - **xUnit.net:** The primary unit testing framework. Dedicated test projects for each module (`App.Modules.X.Tests`).
     - **Moq:** A mocking library used to create mock objects for dependencies, isolating the code under test (e.g., mocking `IMongoCollection<T>`, `IMediator`).
     - **FluentAssertions:** An assertion library that provides a highly readable and fluent syntax for asserting test outcomes.
 - **Benefits:** High code quality, regression prevention, faster development cycles.
@@ -526,7 +526,7 @@ The deployment strategy is entirely focused on leveraging **free tiers** of clou
 
 A robust CI/CD pipeline using **GitHub Actions** will automate the entire software delivery process, ensuring consistency, reliability, and faster iterations.
 
-- **Repository Structure:** A single monorepo is recommended (`dotFitness.WorkoutTracker/`) containing `infra/`, all `.NET` projects, and `dotFitness.WebUI/`.
+- **Repository Structure:** A single monorepo is recommended (`App.ModularMonolith/`) containing `infra/`, all `.NET` projects, and `App.WebUI/`.
 - **Separate Workflows:** Dedicated GitHub Actions workflows will be created for different concerns:
     1. **`infra-deploy.yml` (Infrastructure Pipeline):**
         - **Trigger:** Push to `main` branch affecting files within the `infra/` directory.
@@ -549,4 +549,4 @@ A robust CI/CD pipeline using **GitHub Actions** will automate the entire softwa
             - `azure/static-web-apps-deploy@v1` (deploys static files to Azure Static Web Apps).
         - **Secrets:** `AZURE_STATIC_WEB_APPS_API_TOKEN` (generated by Azure Static Web Apps), `VITE_APP_API_BASE_URL` (environment variable to point to the deployed API URL).
 
-This comprehensive technical document outlines the entire journey for building **dotFitness**, from its conceptual features to its robust deployment and CI/CD strategy.
+This comprehensive technical document outlines the entire journey for building **App**, from its conceptual features to its robust deployment and CI/CD strategy.

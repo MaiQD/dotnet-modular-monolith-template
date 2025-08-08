@@ -13,7 +13,7 @@
 		{
 			"label": "build-api",
 			"type": "shell",
-			"command": "dotnet build src/dotFitness.WorkoutTracker/dotFitness.WorkoutTracker.sln",
+			"command": "dotnet build src/App.ModularMonolith/App.ModularMonolith.sln",
 			"problemMatcher": [
 				"$msCompile"
 			],

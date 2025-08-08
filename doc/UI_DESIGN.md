@@ -1,8 +1,8 @@
 > NOTE: Example product document (UI design). Not part of the reusable template. Safe to remove in your app.
 
-# UI Design Document: dotFitness
+# UI Design Document: App
 
-Document Name: dotFitness UI Design Document
+Document Name: App UI Design Document
 
 Version: 1.1 (Updated)
 
@@ -14,11 +14,11 @@ Date: June 10, 2025
 
 ### 1.1. Purpose of this Document
 
-This document outlines the high-level business and user requirements for **dotFitness**, a web-based application designed to support individuals in tracking and customizing their home workout routines. It serves as a foundational agreement on the application's scope and functionalities from a non-technical perspective.
+This document outlines the high-level business and user requirements for **App**, a web-based application designed to support individuals in tracking and customizing their home workout routines. It serves as a foundational agreement on the application's scope and functionalities from a non-technical perspective.
 
 ### 1.2. UI Design Goals (Updated)
 
-The core UI design goals for **dotFitness** are:
+The core UI design goals for **App** are:
 
 - **Motivating & Engaging:** Inspire users to continue their fitness journey through positive reinforcement, visual progress, and an energetic aesthetic.
 - **Clear & Uncluttered:** Provide a clean interface with minimal distractions, especially during active workout sessions.
@@ -78,7 +78,7 @@ Clean, modern, and highly readable sans-serif fonts will be used, ensuring good 
 
 ### 2.5. Overall Aesthetic
 
-**dotFitness** will embody a **clean, modern, and energetic** aesthetic. Whitespace will be used generously to reduce cognitive load. Cards and subtle shadows will help organize content. Positive and encouraging micro-copy will be integrated throughout the UI. The aesthetic will be maintained across both the light and dark themes, with careful adjustments to background, text, and accent colors to ensure visual harmony and readability.
+**App** will embody a **clean, modern, and energetic** aesthetic. Whitespace will be used generously to reduce cognitive load. Cards and subtle shadows will help organize content. Positive and encouraging micro-copy will be integrated throughout the UI. The aesthetic will be maintained across both the light and dark themes, with careful adjustments to background, text, and accent colors to ensure visual harmony and readability.
 
 ## 3. Layout and Navigation
 
@@ -113,7 +113,7 @@ The design will be built mobile-first using Tailwind CSS's utility classes.
 - **Layout:** Centered content with a minimalist background.
 - **Elements:**
     - **App Logo & Name:** Prominent.
-    - **Tagline/Value Proposition:** A concise sentence explaining what dotFitness offers.
+    - **Tagline/Value Proposition:** A concise sentence explaining what App offers.
     - **"Sign in with Google" Button:** Large, prominent, and following Google's brand guidelines for sign-in buttons.
     - Optional: Small, encouraging graphic or illustration.
     - No other navigation or complex features.
@@ -323,15 +323,15 @@ export const useAuthStore = defineStore('auth', {
     - **Icons/Illustrations:** Will be chosen or styled to appear well in both themes.
 - **Implementation:** Tailwind CSS's built-in `dark:` variant will be extensively used for styling. A root class on the `<html>` element (e.g., `dark`) will control the active theme.
 
-# dotFitness UI Design: Frontend Architecture
+# App UI Design: Frontend Architecture
 
 > Based on modular monolith best practices from [modular-monolith-with-ddd](https://github.com/MaiQD/modular-monolith-with-ddd/blob/master/README.md)
 
-This document outlines the frontend architecture and design principles for the dotFitness workout tracker application.
+This document outlines the frontend architecture and design principles for the App workout tracker application.
 
 ## 🎯 Frontend Architecture Overview
 
-The dotFitness frontend follows a **modular architecture** that mirrors the backend's modular monolith structure, providing:
+The App frontend follows a **modular architecture** that mirrors the backend's modular monolith structure, providing:
 
 - **Module-based organization**: Each backend module has corresponding frontend components
 - **Clean separation**: UI components are organized by business domain
@@ -341,7 +341,7 @@ The dotFitness frontend follows a **modular architecture** that mirrors the back
 ## 🏗️ Frontend Project Structure
 
 ```
-dotFitness.WebUI/
+App.WebUI/
 ├── src/
 │   ├── components/
 │   │   ├── shared/              # 🔗 Shared Components
@@ -486,7 +486,7 @@ dotFitness.WebUI/
   <nav class="bg-white shadow-lg">
     <div class="px-4 py-6">
       <div class="flex items-center justify-between">
-        <h1 class="text-xl font-bold text-gray-900">dotFitness</h1>
+        <h1 class="text-xl font-bold text-gray-900">App</h1>
         <button @click="$emit('toggle')" class="lg:hidden">
           <MenuIcon class="h-6 w-6" />
         </button>
@@ -566,7 +566,7 @@ defineEmits(['update:modelValue', 'blur']);
 <template>
   <div class="max-w-md mx-auto">
     <div class="bg-white rounded-lg shadow-md p-8">
-      <h2 class="text-2xl font-bold text-center mb-6">Welcome to dotFitness</h2>
+      <h2 class="text-2xl font-bold text-center mb-6">Welcome to App</h2>
       
       <button
         @click="handleGoogleLogin"

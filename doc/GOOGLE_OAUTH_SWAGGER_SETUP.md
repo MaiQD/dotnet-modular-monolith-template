@@ -2,11 +2,11 @@
 
 # Google OAuth with Swagger Setup Guide
 
-This guide explains how to configure Google OAuth authentication with Swagger UI in the dotFitness API.
+This guide explains how to configure Google OAuth authentication with Swagger UI in the App API.
 
 ## Overview
 
-The dotFitness API now supports Google OAuth authentication through Swagger UI, allowing you to:
+The App API now supports Google OAuth authentication through Swagger UI, allowing you to:
 - Authenticate with Google directly from the Swagger interface
 - Test protected endpoints with OAuth2 tokens
 - Use both Bearer token and OAuth2 authentication methods
@@ -28,7 +28,7 @@ The dotFitness API now supports Google OAuth authentication through Swagger UI, 
 1. Navigate to **APIs & Services** > **OAuth consent screen**
 2. Choose **External** user type (unless you have a Google Workspace)
 3. Fill in the required information:
-   - App name: `dotFitness API`
+   - App name: `App API`
    - User support email: Your email
    - Developer contact information: Your email
 4. Add scopes:
