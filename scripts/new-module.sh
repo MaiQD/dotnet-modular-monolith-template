@@ -7,7 +7,7 @@ if [[ $# -lt 1 ]]; then
 fi
 
 MODULE="$1"
-ROOT_NS="${2:-dotFitness}"
+ROOT_NS="${2:-App}"
 SOLUTION_DIR=$(basename "$(ls -d src/*/ | head -n1)")
 BASE="src/${SOLUTION_DIR}/Modules/${MODULE}"
 
