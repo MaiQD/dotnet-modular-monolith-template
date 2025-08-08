@@ -1,7 +1,7 @@
-This is a .NET 8 workout tracker application built with Clean Architecture, CQRS (MediatR), and MongoDB (UTC timestamps).
+This is a .NET 8 modular monolith template built with Clean Architecture, CQRS (MediatR), and MongoDB (UTC timestamps).
 
 Architecture & modules
-- Modular monolith: modules (Users, Exercises, Routines, WorkoutLogs) each have Domain, Application, Infrastructure, and dedicated Tests.
+- Modular monolith: example modules (e.g., Users, Exercises) each have Domain, Application, Infrastructure, and dedicated Tests.
 - Clean Architecture: Domain/Application MUST NOT depend on Infrastructure. Use interfaces and DI.
 - Single Responsibility: one handler/command/query/validator per file.
 
@@ -36,5 +36,5 @@ Eventing
 Conventions
 - Keep handlers small; extract complex logic into application services or domain methods.
 - No direct cross-module data access; only via interfaces or events.
-- Update docs (URS.md, UI_DESIGN.md, TECHNICAL.md, ARCHITECTURE.md) when adding features.
+- Update docs (TECHNICAL.md, ARCHITECTURE.md, ADD_NEW_MODULE.md, STEP_BY_STEP.md) when adding features.
 - Branch naming: feature/* with focused commits (what/why).

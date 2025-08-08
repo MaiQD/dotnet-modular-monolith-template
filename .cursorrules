@@ -1,4 +1,4 @@
-# Cursor Rules for dotFitness
+# Cursor Rules for the Modular Monolith Template
 
 ## Architecture & Boundaries
 - Follow Modular Monolith + Clean Architecture.
@@ -50,7 +50,7 @@
 - Prefer Result<T> assertions over exception-based flows for business errors.
 
 ## Documentation Discipline
-- When adding features, update: `URS.md`, `UI_DESIGN.md`, `TECHNICAL.md`, `ARCHITECTURE.md`.
+- When adding features, update relevant docs: `TECHNICAL.md`, `ARCHITECTURE.md`, `ADD_NEW_MODULE.md`, `STEP_BY_STEP.md`.
 
 ## Branching & Commits
 - Use `feature/*` branches.

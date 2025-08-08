@@ -1,3 +1,5 @@
+> NOTE: Example product document (UI design). Not part of the reusable template. Safe to remove in your app.
+
 # UI Design Document: dotFitness
 
 Document Name: dotFitness UI Design Document

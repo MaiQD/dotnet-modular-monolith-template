@@ -1,3 +1,5 @@
+> NOTE: Example project status document. Not part of the reusable template. Safe to remove in your app.
+
 # dotFitness Project Status
 
 > Last Updated: June 2025

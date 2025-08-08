@@ -1,3 +1,5 @@
+> NOTE: Example integration guide (Google OAuth + Swagger). Not part of the reusable template. Safe to remove in your app.
+
 # Google OAuth with Swagger Setup Guide
 
 This guide explains how to configure Google OAuth authentication with Swagger UI in the dotFitness API.

@@ -1,3 +1,5 @@
+> NOTE: Example product document (URS). Not part of the reusable template. Safe to remove in your app.
+
 # Business User Requirements Specification (URS)
 
 Document Name: dotFitness Business User Requirements Specification
