@@ -52,8 +52,8 @@ for COMPOSE_PATH in "src/${OLD_SOLUTION_DIR}/docker-compose.yml" "src/${NEW_SOLU
       -e "s/^\([[:space:]]*container_name:[[:space:]]*\).*-postgres$/\1${SOLUTION_SLUG}-postgres/" \
       -e "s/^\([[:space:]]*container_name:[[:space:]]*\).*-pgadmin$/\1${SOLUTION_SLUG}-pgadmin/" \
       -e "s/^\([[:space:]]*POSTGRES_DB:[[:space:]]*\).*/\1${DB_NAME}/" \
-      -E -e "s/^([[:space:]]*-[[:space:]]*)[A-Za-z0-9_-]+-network(\s*)$/\1${SOLUTION_SLUG}-network\2/" \
-      -E -e "s/^([[:space:]]+)[A-Za-z0-9_-]+-network:(\s*)$/\1${SOLUTION_SLUG}-network:\2/" \
+      -e "s/^\([[:space:]]*-[[:space:]]*\)[A-Za-z0-9_-][A-Za-z0-9_-]*-network\([[:space:]]*\)$/\1${SOLUTION_SLUG}-network\2/" \
+      -e "s/^\([[:space:]][[:space:]]*\)[A-Za-z0-9_-][A-Za-z0-9_-]*-network:\([[:space:]]*\)$/\1${SOLUTION_SLUG}-network:\2/" \
       "${COMPOSE_PATH}"
   fi
 done
