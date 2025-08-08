@@ -25,10 +25,7 @@ builder.Services.AddSwaggerWithOAuth();
 // Add CORS policy
 builder.Services.AddCorsPolicy();
 
-// Add MongoDB services
-var mongoConnectionString = builder.Configuration.GetConnectionString("MongoDB") 
-    ?? throw new InvalidOperationException("MongoDB connection string is not configured");
-builder.Services.AddMongoDbServices(mongoConnectionString);
+// Database services are configured per-module (Users module wires EF Core)
 
 // Set up module registry logger
 var loggerFactory = LoggerFactory.Create(builder => builder.AddSerilog(Log.Logger));
@@ -39,10 +36,8 @@ builder.Services.AddModuleServices(builder.Configuration, microsoftLogger);
 
 var app = builder.Build();
 
-// Configure MongoDB indexes
-await MongoDbIndexConfigurator.ConfigureIndexesAsync(app.Services);
-// Seed MongoDB data
-await MongoDbSeeder.ConfigureSeedsAsync(app.Services);
+// Ensure EF Core databases are created (template-friendly; swap to migrations for production)
+RelationalDbInitializer.EnsureDatabasesCreated(app.Services, microsoftLogger);
 
 // Configure the application pipeline
 app.ConfigureSwaggerUi()

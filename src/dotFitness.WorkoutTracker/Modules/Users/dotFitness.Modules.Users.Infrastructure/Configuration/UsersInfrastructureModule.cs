@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
-using MongoDB.Driver;
+using Microsoft.EntityFrameworkCore;
+using dotFitness.Modules.Users.Infrastructure.Persistence;
 using MediatR;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -33,6 +34,11 @@ public static class UsersInfrastructureModule
     /// <returns>The service collection for chaining</returns>
     public static IServiceCollection AddUsersModule(this IServiceCollection services, IConfiguration configuration)
     {
+    // Database: EF Core + PostgreSQL
+    var connectionString = configuration.GetConnectionString("PostgreSQL")
+                   ?? throw new InvalidOperationException("PostgreSQL connection string is not configured");
+    services.AddDbContext<UsersDbContext>(options => options.UseNpgsql(connectionString));
+
         // Configure User Module Settings
         services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
         services.Configure<AdminSettings>(configuration.GetSection("AdminSettings"));
@@ -59,20 +65,7 @@ public static class UsersInfrastructureModule
 
         services.AddAuthorization();
 
-        // Register MongoDB collections specific to Users module
-        services.AddSingleton(sp =>
-        {
-            var database = sp.GetRequiredService<IMongoDatabase>();
-            return database.GetCollection<User>("users");
-        });
-
-        services.AddSingleton(sp =>
-        {
-            var database = sp.GetRequiredService<IMongoDatabase>();
-            return database.GetCollection<UserMetric>("userMetrics");
-        });
-
-        // Register repositories
+    // Register repositories
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IUserMetricsRepository, UserMetricsRepository>();
 
@@ -97,38 +90,6 @@ public static class UsersInfrastructureModule
         return services;
     }
 
-    /// <summary>
-    /// Configures MongoDB indexes for Users module entities
-    /// </summary>
-    /// <param name="services">The service provider</param>
-    /// <returns>Task representing the async operation</returns>
-    public static async Task ConfigureUsersModuleIndexes(IServiceProvider services)
-    {
-        using var scope = services.CreateScope();
-        var database = scope.ServiceProvider.GetRequiredService<IMongoDatabase>();
-        
-        // Create indexes for User collection
-        var userCollection = database.GetCollection<User>("users");
-        var userIndexBuilder = Builders<User>.IndexKeys;
-        
-        await userCollection.Indexes.CreateManyAsync(new[]
-        {
-            new CreateIndexModel<User>(userIndexBuilder.Ascending(x => x.Email), new CreateIndexOptions { Unique = true }),
-            new CreateIndexModel<User>(userIndexBuilder.Ascending(x => x.GoogleId)),
-            new CreateIndexModel<User>(userIndexBuilder.Ascending(x => x.CreatedAt)),
-            new CreateIndexModel<User>(userIndexBuilder.Ascending(x => x.Roles))
-        });
-
-        // Create indexes for UserMetric collection
-        var userMetricCollection = database.GetCollection<UserMetric>("userMetrics");
-        var userMetricIndexBuilder = Builders<UserMetric>.IndexKeys;
-        
-        await userMetricCollection.Indexes.CreateManyAsync(new[]
-        {
-            new CreateIndexModel<UserMetric>(userMetricIndexBuilder.Ascending(x => x.UserId)),
-            new CreateIndexModel<UserMetric>(userMetricIndexBuilder.Ascending(x => x.Date)),
-            new CreateIndexModel<UserMetric>(userMetricIndexBuilder.Ascending(x => x.UserId).Descending(x => x.Date)),
-            new CreateIndexModel<UserMetric>(userMetricIndexBuilder.Ascending(x => x.UserId).Ascending(x => x.Date), new CreateIndexOptions { Unique = true })
-        });
-    }
+    // With EF Core, indexes are configured via entity configurations and migrations.
+    public static Task ConfigureUsersModuleIndexes(IServiceProvider services) => Task.CompletedTask;
 }

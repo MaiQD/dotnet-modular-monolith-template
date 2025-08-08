@@ -1,0 +1,23 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "build-solution",
+			"type": "shell",
+			"command": "dotnet build",
+			"problemMatcher": [
+				"$msCompile"
+			],
+			"group": "build"
+		},
+		{
+			"label": "build-api",
+			"type": "shell",
+			"command": "dotnet build src/dotFitness.WorkoutTracker/dotFitness.WorkoutTracker.sln",
+			"problemMatcher": [
+				"$msCompile"
+			],
+			"group": "build"
+		}
+	]
+}

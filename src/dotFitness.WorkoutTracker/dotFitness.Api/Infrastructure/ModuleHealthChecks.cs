@@ -19,7 +19,6 @@ public static class ModuleHealthChecks
     {
         services.AddHealthChecks()
             .AddCheck<UsersModuleHealthCheck>("users_module", tags: new[] { "module", "users" })
-            .AddCheck<ExercisesModuleHealthCheck>("exercises_module", tags: new[] { "module", "exercises" })
             .AddCheck<ModuleRegistryHealthCheck>("module_registry", tags: new[] { "module", "registry" });
 
         return services;
@@ -76,55 +75,7 @@ public class UsersModuleHealthCheck : IHealthCheck
     }
 }
 
-/// <summary>
-/// Health check for the Exercises module
-/// </summary>
-public class ExercisesModuleHealthCheck : IHealthCheck
-{
-    private readonly ILogger<ExercisesModuleHealthCheck> _logger;
-
-    public ExercisesModuleHealthCheck(ILogger<ExercisesModuleHealthCheck> logger)
-    {
-        _logger = logger;
-    }
-
-    public Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
-    {
-        try
-        {
-            // Check if Exercises module assemblies are loaded
-            var applicationAssembly = AppDomain.CurrentDomain.GetAssemblies()
-                .FirstOrDefault(a => a.GetName().Name == "dotFitness.Modules.Exercises.Application");
-            
-            var infrastructureAssembly = AppDomain.CurrentDomain.GetAssemblies()
-                .FirstOrDefault(a => a.GetName().Name == "dotFitness.Modules.Exercises.Infrastructure");
-
-            if (applicationAssembly == null || infrastructureAssembly == null)
-            {
-                _logger.LogWarning("Exercises module assemblies not found");
-                return Task.FromResult(HealthCheckResult.Unhealthy("Exercises module assemblies not loaded"));
-            }
-
-            // Check if key types are available
-            var exerciseRepositoryType = infrastructureAssembly.GetType("dotFitness.Modules.Exercises.Infrastructure.Repositories.ExerciseRepository");
-            var createExerciseCommandType = applicationAssembly.GetType("dotFitness.Modules.Exercises.Application.Commands.CreateExerciseCommand");
-
-            if (exerciseRepositoryType == null || createExerciseCommandType == null)
-            {
-                _logger.LogWarning("Exercises module key types not found");
-                return Task.FromResult(HealthCheckResult.Degraded("Exercises module key types not available"));
-            }
-
-            _logger.LogDebug("Exercises module health check passed");
-            return Task.FromResult(HealthCheckResult.Healthy("Exercises module is healthy"));
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error during Exercises module health check");
-            return Task.FromResult(HealthCheckResult.Unhealthy("Exercises module health check failed", ex));
-        }
-    }
-}
+// Exercises module health check removed (module not included in the template sample)
 
 /// <summary>
 /// Health check for the module registry system

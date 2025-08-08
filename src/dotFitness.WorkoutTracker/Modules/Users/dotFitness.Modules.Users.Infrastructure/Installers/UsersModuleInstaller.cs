@@ -1,6 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
-using MongoDB.Driver;
+using Microsoft.EntityFrameworkCore;
 using MediatR;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -55,29 +55,11 @@ public class UsersModuleInstaller : IUsersModuleInstaller
 
         services.AddAuthorization();
 
-        // Register MongoDB collections specific to Users module
-        services.AddSingleton(sp =>
-        {
-            var database = sp.GetRequiredService<IMongoDatabase>();
-            return database.GetCollection<User>("users");
-        });
-
-        services.AddSingleton(sp =>
-        {
-            var database = sp.GetRequiredService<IMongoDatabase>();
-            return database.GetCollection<UserMetric>("userMetrics");
-        });
-
         // Register repositories
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IUserMetricsRepository, UserMetricsRepository>();
 
-        // Register Inbox collection (shared inboxMessages)
-        services.AddSingleton(sp =>
-        {
-            var database = sp.GetRequiredService<IMongoDatabase>();
-            return database.GetCollection<InboxMessage>("inboxMessages");
-        });
+    // Inbox repository is not wired in this template for EF Core; add as needed.
 
         // Register MediatR handlers
         services.AddScoped<IRequestHandler<LoginWithGoogleCommand, Result<LoginResponseDto>>, LoginWithGoogleCommandHandler>();
@@ -103,44 +85,5 @@ public class UsersModuleInstaller : IUsersModuleInstaller
         return services;
     }
 
-    public async Task ConfigureIndexes(IServiceProvider services)
-    {
-        using var scope = services.CreateScope();
-        var database = scope.ServiceProvider.GetRequiredService<IMongoDatabase>();
-        
-        // Create indexes for User collection
-        var userCollection = database.GetCollection<User>("users");
-        var userIndexBuilder = Builders<User>.IndexKeys;
-        
-        await userCollection.Indexes.CreateManyAsync(new[]
-        {
-            new CreateIndexModel<User>(userIndexBuilder.Ascending(x => x.Email), new CreateIndexOptions { Unique = true }),
-            new CreateIndexModel<User>(userIndexBuilder.Ascending(x => x.GoogleId)),
-            new CreateIndexModel<User>(userIndexBuilder.Ascending(x => x.CreatedAt)),
-            new CreateIndexModel<User>(userIndexBuilder.Ascending(x => x.Roles))
-        });
-
-        // Create indexes for UserMetric collection
-        var userMetricCollection = database.GetCollection<UserMetric>("userMetrics");
-        var userMetricIndexBuilder = Builders<UserMetric>.IndexKeys;
-        
-        await userMetricCollection.Indexes.CreateManyAsync(new[]
-        {
-            new CreateIndexModel<UserMetric>(userMetricIndexBuilder.Ascending(x => x.UserId)),
-            new CreateIndexModel<UserMetric>(userMetricIndexBuilder.Ascending(x => x.Date)),
-            new CreateIndexModel<UserMetric>(userMetricIndexBuilder.Ascending(x => x.UserId).Descending(x => x.Date)),
-            new CreateIndexModel<UserMetric>(userMetricIndexBuilder.Ascending(x => x.UserId).Ascending(x => x.Date), new CreateIndexOptions { Unique = true })
-        });
-
-        // Create indexes for Inbox collection (Users consumers)
-        var inboxCollection = database.GetCollection<InboxMessage>("inboxMessages");
-        var inboxIndexBuilder = Builders<InboxMessage>.IndexKeys;
-        await inboxCollection.Indexes.CreateManyAsync(new[]
-        {
-            new CreateIndexModel<InboxMessage>(
-                inboxIndexBuilder.Ascending(x => x.Consumer).Ascending(x => x.EventId),
-                new CreateIndexOptions { Unique = true }),
-            new CreateIndexModel<InboxMessage>(inboxIndexBuilder.Ascending(x => x.Consumer).Ascending(x => x.Status).Ascending(x => x.OccurredOn))
-        });
-    }
+    public Task ConfigureIndexes(IServiceProvider services) => Task.CompletedTask;
 }

@@ -1,40 +1,38 @@
 version: '3.8'
 
 services:
-  mongodb:
-    image: mongo:7.0
-    container_name: dotfitness-mongodb
+  postgres:
+    image: postgres:16
+    container_name: dot-postgres
     restart: unless-stopped
     ports:
-      - "27017:27017"
+      - "5432:5432"
     environment:
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: password
-      MONGO_INITDB_DATABASE: dotFitnessDb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: dot
     volumes:
-      - mongodb_data:/data/db
+      - pg_data:/var/lib/postgresql/data
     networks:
-      - dotfitness-network
+      - dot-network
 
-  mongo-express:
-    image: mongo-express:1.0.2
-    container_name: dotfitness-mongo-express
+  pgadmin:
+    image: dpage/pgadmin4:8
+    container_name: dot-pgadmin
     restart: unless-stopped
-    ports:
-      - "8081:8081"
     environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
-      ME_CONFIG_MONGODB_ADMINPASSWORD: password
-      ME_CONFIG_MONGODB_URL: mongodb://admin:password@mongodb:27017/
-      ME_CONFIG_BASICAUTH: false
+      PGADMIN_DEFAULT_EMAIL: admin@local
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8081:80"
     depends_on:
-      - mongodb
+      - postgres
     networks:
-      - dotfitness-network
+      - dot-network
 
 volumes:
-  mongodb_data:
+  pg_data:
 
 networks:
-  dotfitness-network:
+  dot-network:
     driver: bridge

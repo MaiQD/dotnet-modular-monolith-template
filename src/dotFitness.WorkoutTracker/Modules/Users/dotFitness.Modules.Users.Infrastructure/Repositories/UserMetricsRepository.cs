@@ -1,19 +1,20 @@
-using MongoDB.Driver;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using dotFitness.Modules.Users.Domain.Entities;
 using dotFitness.Modules.Users.Domain.Repositories;
+using dotFitness.Modules.Users.Infrastructure.Persistence;
 using dotFitness.SharedKernel.Results;
 
 namespace dotFitness.Modules.Users.Infrastructure.Repositories;
 
 public class UserMetricsRepository : IUserMetricsRepository
 {
-    private readonly IMongoCollection<UserMetric> _userMetrics;
+    private readonly UsersDbContext _db;
     private readonly ILogger<UserMetricsRepository> _logger;
 
-    public UserMetricsRepository(IMongoDatabase database, ILogger<UserMetricsRepository> logger)
+    public UserMetricsRepository(UsersDbContext db, ILogger<UserMetricsRepository> logger)
     {
-        _userMetrics = database.GetCollection<UserMetric>("userMetrics");
+        _db = db;
         _logger = logger;
     }
 
@@ -21,7 +22,8 @@ public class UserMetricsRepository : IUserMetricsRepository
     {
         try
         {
-            await _userMetrics.InsertOneAsync(userMetric, cancellationToken: cancellationToken);
+            await _db.UserMetrics.AddAsync(userMetric, cancellationToken);
+            await _db.SaveChangesAsync(cancellationToken);
             return Result.Success(userMetric);
         }
         catch (Exception ex)
@@ -35,7 +37,7 @@ public class UserMetricsRepository : IUserMetricsRepository
     {
         try
         {
-            var userMetric = await _userMetrics.Find(um => um.Id == id).FirstOrDefaultAsync(cancellationToken);
+            var userMetric = await _db.UserMetrics.AsNoTracking().FirstOrDefaultAsync(um => um.Id == id, cancellationToken);
             return (userMetric != null 
                 ? Result.Success(userMetric) 
                 : Result.Failure<UserMetric>("User metric not found"));
@@ -51,11 +53,12 @@ public class UserMetricsRepository : IUserMetricsRepository
     {
         try
         {
-            var userMetrics = await _userMetrics
-                .Find(um => um.UserId == userId)
-                .SortByDescending(um => um.Date)
+            var userMetrics = await _db.UserMetrics
+                .AsNoTracking()
+                .Where(um => um.UserId == userId)
+                .OrderByDescending(um => um.Date)
                 .Skip(skip)
-                .Limit(take)
+                .Take(take)
                 .ToListAsync(cancellationToken);
             
             return Result.Success(userMetrics.AsEnumerable());
@@ -71,9 +74,10 @@ public class UserMetricsRepository : IUserMetricsRepository
     {
         try
         {
-            var userMetric = await _userMetrics
-                .Find(um => um.UserId == userId)
-                .SortByDescending(um => um.Date)
+            var userMetric = await _db.UserMetrics
+                .AsNoTracking()
+                .Where(um => um.UserId == userId)
+                .OrderByDescending(um => um.Date)
                 .FirstOrDefaultAsync(cancellationToken);
             
             return userMetric != null 
@@ -95,9 +99,10 @@ public class UserMetricsRepository : IUserMetricsRepository
     {
         try
         {
-            var userMetrics = await _userMetrics
-                .Find(um => um.UserId == userId && um.Date >= startDate && um.Date <= endDate)
-                .SortByDescending(um => um.Date)
+            var userMetrics = await _db.UserMetrics
+                .AsNoTracking()
+                .Where(um => um.UserId == userId && um.Date >= startDate && um.Date <= endDate)
+                .OrderByDescending(um => um.Date)
                 .ToListAsync(cancellationToken);
             
             return Result.Success<IEnumerable<UserMetric>>(userMetrics.AsEnumerable());
@@ -116,9 +121,9 @@ public class UserMetricsRepository : IUserMetricsRepository
     {
         try
         {
-            var userMetric = await _userMetrics
-                .Find(um => um.UserId == userId && um.Date.Date == date.Date)
-                .FirstOrDefaultAsync(cancellationToken);
+            var userMetric = await _db.UserMetrics
+                .AsNoTracking()
+                .FirstOrDefaultAsync(um => um.UserId == userId && um.Date.Date == date.Date, cancellationToken);
             
             return userMetric != null 
                 ? Result.Success(userMetric) 
@@ -136,14 +141,9 @@ public class UserMetricsRepository : IUserMetricsRepository
         try
         {
             userMetric.UpdatedAt = DateTime.UtcNow;
-            var result = await _userMetrics.ReplaceOneAsync(
-                um => um.Id == userMetric.Id, 
-                userMetric, 
-                cancellationToken: cancellationToken);
-            
-            return result.ModifiedCount > 0 
-                ? Result.Success(userMetric) 
-                : Result.Failure<UserMetric>("User metric not found or not modified");
+            _db.UserMetrics.Update(userMetric);
+            var count = await _db.SaveChangesAsync(cancellationToken);
+            return count > 0 ? Result.Success(userMetric) : Result.Failure<UserMetric>("User metric not found or not modified");
         }
         catch (Exception ex)
         {
@@ -156,10 +156,11 @@ public class UserMetricsRepository : IUserMetricsRepository
     {
         try
         {
-            var result = await _userMetrics.DeleteOneAsync(um => um.Id == id, cancellationToken);
-            return result.DeletedCount > 0 
-                ? Result.Success() 
-                : Result.Failure("User metric not found");
+            var entity = await _db.UserMetrics.FirstOrDefaultAsync(um => um.Id == id, cancellationToken);
+            if (entity == null) return Result.Failure("User metric not found");
+            _db.UserMetrics.Remove(entity);
+            await _db.SaveChangesAsync(cancellationToken);
+            return Result.Success();
         }
         catch (Exception ex)
         {
@@ -172,7 +173,7 @@ public class UserMetricsRepository : IUserMetricsRepository
     {
         try
         {
-            var count = await _userMetrics.CountDocumentsAsync(um => um.UserId == userId, cancellationToken: cancellationToken);
+            var count = await _db.UserMetrics.LongCountAsync(um => um.UserId == userId, cancellationToken);
             return Result.Success(count);
         }
         catch (Exception ex)
@@ -189,11 +190,8 @@ public class UserMetricsRepository : IUserMetricsRepository
     {
         try
         {
-            var count = await _userMetrics.CountDocumentsAsync(
-                um => um.UserId == userId && um.Date.Date == date.Date, 
-                cancellationToken: cancellationToken);
-            
-            return Result.Success(count > 0);
+            var exists = await _db.UserMetrics.AnyAsync(um => um.UserId == userId && um.Date.Date == date.Date, cancellationToken);
+            return Result.Success(exists);
         }
         catch (Exception ex)
         {

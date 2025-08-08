@@ -1,53 +1,39 @@
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
 using dotFitness.SharedKernel.Interfaces;
 
 namespace dotFitness.Modules.Users.Domain.Entities;
 
+//TODO: only keep necessary properties
 public class User : IEntity
 {
-    [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
-    public string Id { get; set; } = ObjectId.GenerateNewId().ToString();
+    //TODO: Ids never using string
+    public string Id { get; set; } = Guid.NewGuid().ToString();
 
-    [BsonElement("googleId")] public string? GoogleId { get; set; }
+    public string? GoogleId { get; set; }
 
-    [BsonElement("email")] [BsonRequired] public string Email { get; set; } = string.Empty;
+    public string Email { get; set; } = string.Empty;
 
-    [BsonElement("displayName")]
-    [BsonRequired]
     public string DisplayName { get; set; } = string.Empty;
 
-    [BsonElement("loginMethod")]
-    [BsonRepresentation(BsonType.String)]
     public LoginMethod LoginMethod { get; set; } = LoginMethod.Google;
 
-    [BsonElement("roles")] public List<string> Roles { get; set; } = new() { "User" };
+    public List<string> Roles { get; set; } = new() { "User" };
 
-    [BsonElement("gender")]
-    [BsonRepresentation(BsonType.String)]
     public Gender? Gender { get; set; }
 
-    [BsonElement("dateOfBirth")] public DateTime? DateOfBirth { get; set; }
+    public DateTime? DateOfBirth { get; set; }
 
-    [BsonElement("unitPreference")]
-    [BsonRepresentation(BsonType.String)]
     public UnitPreference UnitPreference { get; set; } = UnitPreference.Metric;
 
-    [BsonElement("createdAt")] public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    [BsonElement("updatedAt")] public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
-    [BsonElement("isOnboarded")] public bool IsOnboarded { get; set; } = false;
+    public bool IsOnboarded { get; set; } = false;
 
-    [BsonElement("onboardingCompletedAt")] public DateTime? OnboardingCompletedAt { get; set; }
+    public DateTime? OnboardingCompletedAt { get; set; }
 
-    [BsonElement("availableEquipmentIds")]
-    [BsonRepresentation(BsonType.ObjectId)]
     public List<string> AvailableEquipmentIds { get; set; } = new();
 
-    [BsonElement("focusMuscleGroupIds")]
-    [BsonRepresentation(BsonType.ObjectId)]
     public List<string> FocusMuscleGroupIds { get; set; } = new();
 
     public bool IsAdmin => Roles.Contains("Admin");

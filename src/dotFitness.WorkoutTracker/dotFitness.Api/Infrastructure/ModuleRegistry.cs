@@ -42,10 +42,7 @@ public static class ModuleRegistry
     /// </summary>
     public static readonly string[] ModuleNames = 
     {
-        "Users",
-        "Exercises", 
-        "Routines",
-        "WorkoutLogs"
+        "Users"
     };
 
     /// <summary>
