@@ -25,8 +25,8 @@ A generalized .NET modular monolith template following Clean Architecture with m
    - Configure connection strings and JWT in `appsettings.Development.json`
 
 ## Structure
-- `src/<SolutionName>/dotFitness.Api/` API Composition Root and shared infra
-- `src/<SolutionName>/dotFitness.SharedKernel/` shared types/utilities (not domain logic)
+- `src/<SolutionName>/App.Api/` API Composition Root and shared infra
+- `src/<SolutionName>/App.SharedKernel/` shared types/utilities (not domain logic)
 - `src/<SolutionName>/Modules/<X>/` per-module Domain/Application/Infrastructure
 - `tests/` API and module tests
 

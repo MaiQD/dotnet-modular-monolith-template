@@ -1,10 +1,10 @@
-# dotFitness Architecture: Modular Monolith with DDD
+# App Architecture: Modular Monolith with DDD
 
 > Based on industry best practices from [modular-monolith-with-ddd](https://github.com/MaiQD/modular-monolith-with-ddd/blob/master/README.md)
 
 ## 🏗️ Architectural Overview
 
-dotFitness implements a **Modular Monolith** architecture that combines the simplicity of a monolith with the scalability and maintainability of microservices. This pattern is inspired by Domain-Driven Design (DDD) principles and provides a clear path for future evolution.
+App implements a **Modular Monolith** architecture that combines the simplicity of a monolith with the scalability and maintainability of microservices. This pattern is inspired by Domain-Driven Design (DDD) principles and provides a clear path for future evolution.
 
 ## 🎯 Core Principles
 
@@ -60,8 +60,8 @@ dotFitness implements a **Modular Monolith** architecture that combines the simp
 ## 📁 Project Structure
 
 ```
-dotFitness.WorkoutTracker/
-├── dotFitness.Api/                    # 🚀 Application Entry Point
+App.ModularMonolith/
+├── App.Api/                    # 🚀 Application Entry Point
 │   ├── Controllers/                   # REST API endpoints
 │   ├── Infrastructure/               # Cross-cutting concerns
 │   │   ├── Metrics/                  # Performance monitoring
@@ -70,7 +70,7 @@ dotFitness.WorkoutTracker/
 │   │   └── ModuleConfigurationValidator.cs
 │   └── Program.cs                    # Application bootstrap
 │
-├── dotFitness.SharedKernel/          # 🔗 Shared Components
+├── App.SharedKernel/          # 🔗 Shared Components
 │   ├── Results/                      # Result pattern implementation
 │   ├── Outbox/                       # Outbox pattern for events
 │   ├── Interfaces/                   # Common interfaces
@@ -78,16 +78,16 @@ dotFitness.WorkoutTracker/
 │
 └── Modules/                          # 📦 Business Modules
     ├── Users/                        # 👤 User Management Module
-    │   ├── dotFitness.Modules.Users.Domain/
-    │   ├── dotFitness.Modules.Users.Application/
-    │   ├── dotFitness.Modules.Users.Infrastructure/
-    │   └── dotFitness.Modules.Users.Tests/
+    │   ├── App.Modules.Users.Domain/
+    │   ├── App.Modules.Users.Application/
+    │   ├── App.Modules.Users.Infrastructure/
+    │   └── App.Modules.Users.Tests/
     │
     ├── Exercises/                    # 💪 Exercise Management Module
-    │   ├── dotFitness.Modules.Exercises.Domain/
-    │   ├── dotFitness.Modules.Exercises.Application/
-    │   ├── dotFitness.Modules.Exercises.Infrastructure/
-    │   └── dotFitness.Modules.Exercises.Tests/
+    │   ├── App.Modules.Exercises.Domain/
+    │   ├── App.Modules.Exercises.Application/
+    │   ├── App.Modules.Exercises.Infrastructure/
+    │   └── App.Modules.Exercises.Tests/
     │
     ├── Routines/                     # 📋 Workout Routine Module (Planned)
     │   └── [Future implementation]
@@ -314,7 +314,7 @@ public async Task Handle_ValidCommand_ReturnsSuccess()
 
 ### Test Structure
 ```
-dotFitness.Modules.Users.Tests/
+App.Modules.Users.Tests/
 ├── Domain/           # Entity and business logic tests
 ├── Application/      # Command/Query handler tests
 ├── Infrastructure/   # Repository and external service tests

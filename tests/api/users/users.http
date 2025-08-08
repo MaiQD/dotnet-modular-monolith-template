@@ -1,6 +1,6 @@
 ### Users Module API Tests
 ### This file contains comprehensive API tests for the Users module
-### Make sure to run the application first: dotnet run --project src/dotFitness.WorkoutTracker/dotFitness.Api
+### Make sure to run the application first: dotnet run --project src/App.ModularMonolith/App.Api
 
 ### Variables
 @baseUrl = {{base_url}}
@@ -477,7 +477,7 @@ client.test("Add complete metric for BMI calculation", function() {
 ###    - Large data handling
 ### 
 ### To run these tests:
-### 1. Start the application: `dotnet run --project src/dotFitness.WorkoutTracker/dotFitness.Api`
+### 1. Start the application: `dotnet run --project src/App.ModularMonolith/App.Api`
 ### 2. Update environment variables in http-client.env.json
 ### 3. Authenticate using auth.http to get a valid token
 ### 4. Run tests in sequence or individually

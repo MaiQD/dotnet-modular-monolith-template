@@ -1,10 +1,10 @@
-# Add New Module to dotFitness - GitHub Copilot Instructions
+# Add New Module to App - GitHub Copilot Instructions
 
 ## Overview
-This prompt guides GitHub Copilot to create a new module in the dotFitness workout tracker application following the established Clean Architecture and modular monolith patterns.
+This prompt guides GitHub Copilot to create a new module in the App workout tracker application following the established Clean Architecture and modular monolith patterns.
 
 ## When to Use This Prompt
-Use this prompt when you need to add a completely new module to the dotFitness application (e.g., Exercises, Routines, WorkoutLogs, or any new business domain).
+Use this prompt when you need to add a completely new module to the App application (e.g., Exercises, Routines, WorkoutLogs, or any new business domain).
 
 ## Project Architecture Context
 - **Pattern**: Modular Monolith with Clean Architecture
@@ -27,29 +27,29 @@ For rapid module creation, run this complete setup script (replace `[ModuleName]
 MODULE_NAME="[ModuleName]"
 
 # Step 1: Create all module projects
-dotnet new classlib -n dotFitness.Modules.${MODULE_NAME}.Domain -o Modules/${MODULE_NAME}/dotFitness.Modules.${MODULE_NAME}.Domain && \
-dotnet new classlib -n dotFitness.Modules.${MODULE_NAME}.Application -o Modules/${MODULE_NAME}/dotFitness.Modules.${MODULE_NAME}.Application && \
-dotnet new classlib -n dotFitness.Modules.${MODULE_NAME}.Infrastructure -o Modules/${MODULE_NAME}/dotFitness.Modules.${MODULE_NAME}.Infrastructure && \
-dotnet new xunit -n dotFitness.Modules.${MODULE_NAME}.Tests -o Modules/${MODULE_NAME}/dotFitness.Modules.${MODULE_NAME}.Tests
+dotnet new classlib -n App.Modules.${MODULE_NAME}.Domain -o Modules/${MODULE_NAME}/App.Modules.${MODULE_NAME}.Domain && \
+dotnet new classlib -n App.Modules.${MODULE_NAME}.Application -o Modules/${MODULE_NAME}/App.Modules.${MODULE_NAME}.Application && \
+dotnet new classlib -n App.Modules.${MODULE_NAME}.Infrastructure -o Modules/${MODULE_NAME}/App.Modules.${MODULE_NAME}.Infrastructure && \
+dotnet new xunit -n App.Modules.${MODULE_NAME}.Tests -o Modules/${MODULE_NAME}/App.Modules.${MODULE_NAME}.Tests
 
 # Step 2: Add all projects to solution
 dotnet sln add \
-  Modules/${MODULE_NAME}/dotFitness.Modules.${MODULE_NAME}.Domain/dotFitness.Modules.${MODULE_NAME}.Domain.csproj \
-  Modules/${MODULE_NAME}/dotFitness.Modules.${MODULE_NAME}.Application/dotFitness.Modules.${MODULE_NAME}.Application.csproj \
-  Modules/${MODULE_NAME}/dotFitness.Modules.${MODULE_NAME}.Infrastructure/dotFitness.Modules.${MODULE_NAME}.Infrastructure.csproj \
-  Modules/${MODULE_NAME}/dotFitness.Modules.${MODULE_NAME}.Tests/dotFitness.Modules.${MODULE_NAME}.Tests.csproj
+  Modules/${MODULE_NAME}/App.Modules.${MODULE_NAME}.Domain/App.Modules.${MODULE_NAME}.Domain.csproj \
+  Modules/${MODULE_NAME}/App.Modules.${MODULE_NAME}.Application/App.Modules.${MODULE_NAME}.Application.csproj \
+  Modules/${MODULE_NAME}/App.Modules.${MODULE_NAME}.Infrastructure/App.Modules.${MODULE_NAME}.Infrastructure.csproj \
+  Modules/${MODULE_NAME}/App.Modules.${MODULE_NAME}.Tests/App.Modules.${MODULE_NAME}.Tests.csproj
 
 # Step 3: Configure all project references
-dotnet add dotFitness.Api/dotFitness.Api.csproj reference Modules/${MODULE_NAME}/dotFitness.Modules.${MODULE_NAME}.Application/dotFitness.Modules.${MODULE_NAME}.Application.csproj && \
-dotnet add Modules/${MODULE_NAME}/dotFitness.Modules.${MODULE_NAME}.Application/dotFitness.Modules.${MODULE_NAME}.Application.csproj reference dotFitness.SharedKernel/dotFitness.SharedKernel.csproj && \
-dotnet add Modules/${MODULE_NAME}/dotFitness.Modules.${MODULE_NAME}.Domain/dotFitness.Modules.${MODULE_NAME}.Domain.csproj reference dotFitness.SharedKernel/dotFitness.SharedKernel.csproj && \
-dotnet add Modules/${MODULE_NAME}/dotFitness.Modules.${MODULE_NAME}.Infrastructure/dotFitness.Modules.${MODULE_NAME}.Infrastructure.csproj reference Modules/${MODULE_NAME}/dotFitness.Modules.${MODULE_NAME}.Domain/dotFitness.Modules.${MODULE_NAME}.Domain.csproj && \
-dotnet add Modules/${MODULE_NAME}/dotFitness.Modules.${MODULE_NAME}.Infrastructure/dotFitness.Modules.${MODULE_NAME}.Infrastructure.csproj reference Modules/${MODULE_NAME}/dotFitness.Modules.${MODULE_NAME}.Application/dotFitness.Modules.${MODULE_NAME}.Application.csproj && \
-dotnet add Modules/${MODULE_NAME}/dotFitness.Modules.${MODULE_NAME}.Infrastructure/dotFitness.Modules.${MODULE_NAME}.Infrastructure.csproj reference dotFitness.SharedKernel/dotFitness.SharedKernel.csproj && \
-dotnet add Modules/${MODULE_NAME}/dotFitness.Modules.${MODULE_NAME}.Tests/dotFitness.Modules.${MODULE_NAME}.Tests.csproj reference Modules/${MODULE_NAME}/dotFitness.Modules.${MODULE_NAME}.Application/dotFitness.Modules.${MODULE_NAME}.Application.csproj && \
-dotnet add Modules/${MODULE_NAME}/dotFitness.Modules.${MODULE_NAME}.Tests/dotFitness.Modules.${MODULE_NAME}.Tests.csproj reference Modules/${MODULE_NAME}/dotFitness.Modules.${MODULE_NAME}.Domain/dotFitness.Modules.${MODULE_NAME}.Domain.csproj && \
-dotnet add Modules/${MODULE_NAME}/dotFitness.Modules.${MODULE_NAME}.Tests/dotFitness.Modules.${MODULE_NAME}.Tests.csproj reference Modules/${MODULE_NAME}/dotFitness.Modules.${MODULE_NAME}.Infrastructure/dotFitness.Modules.${MODULE_NAME}.Infrastructure.csproj && \
-dotnet add Modules/${MODULE_NAME}/dotFitness.Modules.${MODULE_NAME}.Tests/dotFitness.Modules.${MODULE_NAME}.Tests.csproj reference dotFitness.SharedKernel/dotFitness.SharedKernel.csproj
+dotnet add App.Api/App.Api.csproj reference Modules/${MODULE_NAME}/App.Modules.${MODULE_NAME}.Application/App.Modules.${MODULE_NAME}.Application.csproj && \
+dotnet add Modules/${MODULE_NAME}/App.Modules.${MODULE_NAME}.Application/App.Modules.${MODULE_NAME}.Application.csproj reference App.SharedKernel/App.SharedKernel.csproj && \
+dotnet add Modules/${MODULE_NAME}/App.Modules.${MODULE_NAME}.Domain/App.Modules.${MODULE_NAME}.Domain.csproj reference App.SharedKernel/App.SharedKernel.csproj && \
+dotnet add Modules/${MODULE_NAME}/App.Modules.${MODULE_NAME}.Infrastructure/App.Modules.${MODULE_NAME}.Infrastructure.csproj reference Modules/${MODULE_NAME}/App.Modules.${MODULE_NAME}.Domain/App.Modules.${MODULE_NAME}.Domain.csproj && \
+dotnet add Modules/${MODULE_NAME}/App.Modules.${MODULE_NAME}.Infrastructure/App.Modules.${MODULE_NAME}.Infrastructure.csproj reference Modules/${MODULE_NAME}/App.Modules.${MODULE_NAME}.Application/App.Modules.${MODULE_NAME}.Application.csproj && \
+dotnet add Modules/${MODULE_NAME}/App.Modules.${MODULE_NAME}.Infrastructure/App.Modules.${MODULE_NAME}.Infrastructure.csproj reference App.SharedKernel/App.SharedKernel.csproj && \
+dotnet add Modules/${MODULE_NAME}/App.Modules.${MODULE_NAME}.Tests/App.Modules.${MODULE_NAME}.Tests.csproj reference Modules/${MODULE_NAME}/App.Modules.${MODULE_NAME}.Application/App.Modules.${MODULE_NAME}.Application.csproj && \
+dotnet add Modules/${MODULE_NAME}/App.Modules.${MODULE_NAME}.Tests/App.Modules.${MODULE_NAME}.Tests.csproj reference Modules/${MODULE_NAME}/App.Modules.${MODULE_NAME}.Domain/App.Modules.${MODULE_NAME}.Domain.csproj && \
+dotnet add Modules/${MODULE_NAME}/App.Modules.${MODULE_NAME}.Tests/App.Modules.${MODULE_NAME}.Tests.csproj reference Modules/${MODULE_NAME}/App.Modules.${MODULE_NAME}.Infrastructure/App.Modules.${MODULE_NAME}.Infrastructure.csproj && \
+dotnet add Modules/${MODULE_NAME}/App.Modules.${MODULE_NAME}.Tests/App.Modules.${MODULE_NAME}.Tests.csproj reference App.SharedKernel/App.SharedKernel.csproj
 
 echo "Module ${MODULE_NAME} projects created and configured successfully!"
 ```
@@ -64,17 +64,17 @@ Create the following projects for the new module (replace `[ModuleName]` with th
 
 ```bash
 # Create module projects in organized folder structure
-dotnet new classlib -n dotFitness.Modules.[ModuleName].Domain -o Modules/[ModuleName]/dotFitness.Modules.[ModuleName].Domain && \
-dotnet new classlib -n dotFitness.Modules.[ModuleName].Application -o Modules/[ModuleName]/dotFitness.Modules.[ModuleName].Application && \
-dotnet new classlib -n dotFitness.Modules.[ModuleName].Infrastructure -o Modules/[ModuleName]/dotFitness.Modules.[ModuleName].Infrastructure && \
-dotnet new xunit -n dotFitness.Modules.[ModuleName].Tests -o Modules/[ModuleName]/dotFitness.Modules.[ModuleName].Tests
+dotnet new classlib -n App.Modules.[ModuleName].Domain -o Modules/[ModuleName]/App.Modules.[ModuleName].Domain && \
+dotnet new classlib -n App.Modules.[ModuleName].Application -o Modules/[ModuleName]/App.Modules.[ModuleName].Application && \
+dotnet new classlib -n App.Modules.[ModuleName].Infrastructure -o Modules/[ModuleName]/App.Modules.[ModuleName].Infrastructure && \
+dotnet new xunit -n App.Modules.[ModuleName].Tests -o Modules/[ModuleName]/App.Modules.[ModuleName].Tests
 
 # Add all projects to solution
 dotnet sln add \
-  Modules/[ModuleName]/dotFitness.Modules.[ModuleName].Domain/dotFitness.Modules.[ModuleName].Domain.csproj \
-  Modules/[ModuleName]/dotFitness.Modules.[ModuleName].Application/dotFitness.Modules.[ModuleName].Application.csproj \
-  Modules/[ModuleName]/dotFitness.Modules.[ModuleName].Infrastructure/dotFitness.Modules.[ModuleName].Infrastructure.csproj \
-  Modules/[ModuleName]/dotFitness.Modules.[ModuleName].Tests/dotFitness.Modules.[ModuleName].Tests.csproj
+  Modules/[ModuleName]/App.Modules.[ModuleName].Domain/App.Modules.[ModuleName].Domain.csproj \
+  Modules/[ModuleName]/App.Modules.[ModuleName].Application/App.Modules.[ModuleName].Application.csproj \
+  Modules/[ModuleName]/App.Modules.[ModuleName].Infrastructure/App.Modules.[ModuleName].Infrastructure.csproj \
+  Modules/[ModuleName]/App.Modules.[ModuleName].Tests/App.Modules.[ModuleName].Tests.csproj
 ```
 
 ### Step 2: Configure Project References
@@ -83,32 +83,32 @@ Set up proper Clean Architecture dependencies:
 
 ```bash
 # API references Application layer only
-dotnet add dotFitness.Api/dotFitness.Api.csproj reference Modules/[ModuleName]/dotFitness.Modules.[ModuleName].Application/dotFitness.Modules.[ModuleName].Application.csproj
+dotnet add App.Api/App.Api.csproj reference Modules/[ModuleName]/App.Modules.[ModuleName].Application/App.Modules.[ModuleName].Application.csproj
 
 # Application layer references
-dotnet add Modules/[ModuleName]/dotFitness.Modules.[ModuleName].Application/dotFitness.Modules.[ModuleName].Application.csproj reference dotFitness.SharedKernel/dotFitness.SharedKernel.csproj
+dotnet add Modules/[ModuleName]/App.Modules.[ModuleName].Application/App.Modules.[ModuleName].Application.csproj reference App.SharedKernel/App.SharedKernel.csproj
 
 # Domain layer references  
-dotnet add Modules/[ModuleName]/dotFitness.Modules.[ModuleName].Domain/dotFitness.Modules.[ModuleName].Domain.csproj reference dotFitness.SharedKernel/dotFitness.SharedKernel.csproj
+dotnet add Modules/[ModuleName]/App.Modules.[ModuleName].Domain/App.Modules.[ModuleName].Domain.csproj reference App.SharedKernel/App.SharedKernel.csproj
 
 # Infrastructure layer references
-dotnet add Modules/[ModuleName]/dotFitness.Modules.[ModuleName].Infrastructure/dotFitness.Modules.[ModuleName].Infrastructure.csproj reference Modules/[ModuleName]/dotFitness.Modules.[ModuleName].Domain/dotFitness.Modules.[ModuleName].Domain.csproj && \
-dotnet add Modules/[ModuleName]/dotFitness.Modules.[ModuleName].Infrastructure/dotFitness.Modules.[ModuleName].Infrastructure.csproj reference Modules/[ModuleName]/dotFitness.Modules.[ModuleName].Application/dotFitness.Modules.[ModuleName].Application.csproj && \
-dotnet add Modules/[ModuleName]/dotFitness.Modules.[ModuleName].Infrastructure/dotFitness.Modules.[ModuleName].Infrastructure.csproj reference dotFitness.SharedKernel/dotFitness.SharedKernel.csproj
+dotnet add Modules/[ModuleName]/App.Modules.[ModuleName].Infrastructure/App.Modules.[ModuleName].Infrastructure.csproj reference Modules/[ModuleName]/App.Modules.[ModuleName].Domain/App.Modules.[ModuleName].Domain.csproj && \
+dotnet add Modules/[ModuleName]/App.Modules.[ModuleName].Infrastructure/App.Modules.[ModuleName].Infrastructure.csproj reference Modules/[ModuleName]/App.Modules.[ModuleName].Application/App.Modules.[ModuleName].Application.csproj && \
+dotnet add Modules/[ModuleName]/App.Modules.[ModuleName].Infrastructure/App.Modules.[ModuleName].Infrastructure.csproj reference App.SharedKernel/App.SharedKernel.csproj
 
 # Tests references
-dotnet add Modules/[ModuleName]/dotFitness.Modules.[ModuleName].Tests/dotFitness.Modules.[ModuleName].Tests.csproj reference Modules/[ModuleName]/dotFitness.Modules.[ModuleName].Application/dotFitness.Modules.[ModuleName].Application.csproj && \
-dotnet add Modules/[ModuleName]/dotFitness.Modules.[ModuleName].Tests/dotFitness.Modules.[ModuleName].Tests.csproj reference Modules/[ModuleName]/dotFitness.Modules.[ModuleName].Domain/dotFitness.Modules.[ModuleName].Domain.csproj && \
-dotnet add Modules/[ModuleName]/dotFitness.Modules.[ModuleName].Tests/dotFitness.Modules.[ModuleName].Tests.csproj reference Modules/[ModuleName]/dotFitness.Modules.[ModuleName].Infrastructure/dotFitness.Modules.[ModuleName].Infrastructure.csproj && \
-dotnet add Modules/[ModuleName]/dotFitness.Modules.[ModuleName].Tests/dotFitness.Modules.[ModuleName].Tests.csproj reference dotFitness.SharedKernel/dotFitness.SharedKernel.csproj
+dotnet add Modules/[ModuleName]/App.Modules.[ModuleName].Tests/App.Modules.[ModuleName].Tests.csproj reference Modules/[ModuleName]/App.Modules.[ModuleName].Application/App.Modules.[ModuleName].Application.csproj && \
+dotnet add Modules/[ModuleName]/App.Modules.[ModuleName].Tests/App.Modules.[ModuleName].Tests.csproj reference Modules/[ModuleName]/App.Modules.[ModuleName].Domain/App.Modules.[ModuleName].Domain.csproj && \
+dotnet add Modules/[ModuleName]/App.Modules.[ModuleName].Tests/App.Modules.[ModuleName].Tests.csproj reference Modules/[ModuleName]/App.Modules.[ModuleName].Infrastructure/App.Modules.[ModuleName].Infrastructure.csproj && \
+dotnet add Modules/[ModuleName]/App.Modules.[ModuleName].Tests/App.Modules.[ModuleName].Tests.csproj reference App.SharedKernel/App.SharedKernel.csproj
 ```
 
 ### Step 3: Domain Layer Implementation
 
-Create the following structure in `Modules/[ModuleName]/dotFitness.Modules.[ModuleName].Domain`:
+Create the following structure in `Modules/[ModuleName]/App.Modules.[ModuleName].Domain`:
 
 ```
-Modules/[ModuleName]/dotFitness.Modules.[ModuleName].Domain/
+Modules/[ModuleName]/App.Modules.[ModuleName].Domain/
 ├── Entities/
 │   └── [MainEntity].cs          # Primary domain entity
 ├── Repositories/
@@ -132,10 +132,10 @@ Modules/[ModuleName]/dotFitness.Modules.[ModuleName].Domain/
 
 ### Step 4: Application Layer Implementation
 
-Create the following structure in `Modules/[ModuleName]/dotFitness.Modules.[ModuleName].Application`:
+Create the following structure in `Modules/[ModuleName]/App.Modules.[ModuleName].Application`:
 
 ```
-Modules/[ModuleName]/dotFitness.Modules.[ModuleName].Application/
+Modules/[ModuleName]/App.Modules.[ModuleName].Application/
 ├── Commands/
 │   ├── Create[Entity]Command.cs
 │   ├── Update[Entity]Command.cs
@@ -176,10 +176,10 @@ Modules/[ModuleName]/dotFitness.Modules.[ModuleName].Application/
 
 ### Step 5: Infrastructure Layer Implementation
 
-Create the following structure in `Modules/[ModuleName]/dotFitness.Modules.[ModuleName].Infrastructure`:
+Create the following structure in `Modules/[ModuleName]/App.Modules.[ModuleName].Infrastructure`:
 
 ```
-Modules/[ModuleName]/dotFitness.Modules.[ModuleName].Infrastructure/
+Modules/[ModuleName]/App.Modules.[ModuleName].Infrastructure/
 ├── Repositories/
 │   └── [Entity]Repository.cs    # MongoDB implementation
 ├── Handlers/
@@ -216,7 +216,7 @@ Modules/[ModuleName]/dotFitness.Modules.[ModuleName].Infrastructure/
 
 ### Step 6: API Integration
 
-Create controller in `dotFitness.Api/Controllers/[ModuleName]Controller.cs`:
+Create controller in `App.Api/Controllers/[ModuleName]Controller.cs`:
 
 #### Controller Requirements:
 - Use `[ApiController]` and `[Route("api/v1/[controller]")]` attributes
@@ -228,7 +228,7 @@ Create controller in `dotFitness.Api/Controllers/[ModuleName]Controller.cs`:
 
 ### Step 7: Update Module Registry
 
-Add the new module to `dotFitness.Api/Infrastructure/ModuleRegistry.cs`:
+Add the new module to `App.Api/Infrastructure/ModuleRegistry.cs`:
 
 ```csharp
 private static readonly string[] ModuleNames = 
@@ -298,4 +298,4 @@ The module should handle:
 - Custom user exercises vs. global exercises
 - Exercise search and filtering capabilities
 
-This prompt ensures consistent, high-quality module implementation following the established dotFitness architecture patterns.
+This prompt ensures consistent, high-quality module implementation following the established App architecture patterns.

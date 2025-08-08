@@ -2,7 +2,7 @@
 
 # Business User Requirements Specification (URS)
 
-Document Name: dotFitness Business User Requirements Specification
+Document Name: App Business User Requirements Specification
 
 Version: 1.1 (Updated)
 
@@ -14,15 +14,15 @@ Date: June 10, 2025
 
 ### 1.1. Purpose of this Document
 
-This document outlines the high-level business and user requirements for **dotFitness**, a web-based application designed to support individuals in tracking and customizing their home workout routines. It serves as a foundational agreement on the application's scope and functionalities from a non-technical perspective.
+This document outlines the high-level business and user requirements for **App**, a web-based application designed to support individuals in tracking and customizing their home workout routines. It serves as a foundational agreement on the application's scope and functionalities from a non-technical perspective.
 
 ### 1.2. System Overview
 
-**dotFitness** is a personalized digital workout companion focused on making fitness accessible and manageable for users at home. It will allow individuals to create and manage their own exercises and workout routines, log their daily workout activities, and visualize their progress over time. The primary goal is to provide a highly customizable and motivating platform that helps users stay consistent with their fitness journey without needing a traditional gym environment.
+**App** is a personalized digital workout companion focused on making fitness accessible and manageable for users at home. It will allow individuals to create and manage their own exercises and workout routines, log their daily workout activities, and visualize their progress over time. The primary goal is to provide a highly customizable and motivating platform that helps users stay consistent with their fitness journey without needing a traditional gym environment.
 
 ### 1.3. Target Audience
 
-The primary target audience for **dotFitness** is:
+The primary target audience for **App** is:
 
 - **Individuals trying to stay active at home:** Users who may not have access to a gym, prefer home workouts, or require flexibility in their fitness schedule.
 - **Users seeking structured guidance:** Individuals who want to plan their workouts effectively but may lack personal trainer access.
@@ -31,7 +31,7 @@ The primary target audience for **dotFitness** is:
 
 ### 1.4. Scope of the Project
 
-This document defines the requirements for the initial release of the **dotFitness** web application.
+This document defines the requirements for the initial release of the **App** web application.
 
 **In-Scope:**
 
@@ -173,7 +173,7 @@ This document defines the requirements for the initial release of the **dotFitne
 
 - **A-001:** Users will have a stable internet connection to use the application.
 - **A-002:** Users will have an active Google account for authentication purposes.
-- **A-003:** Exercise video links will be hosted externally (e.g., YouTube, Vimeo) and linked to, not uploaded directly to dotFitness.
+- **A-003:** Exercise video links will be hosted externally (e.g., YouTube, Vimeo) and linked to, not uploaded directly to App.
 - **A-004:** The initial focus is on the web application, without immediate plans for dedicated native mobile apps.
 - **A-005:** The initial user base will be a small subset of individuals, allowing for utilization of free cloud tiers.
 - **A-006:** A secure process for defining initial administrative users (via email whitelist) will be implemented.

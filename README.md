@@ -23,8 +23,8 @@ It ships with example modules you can keep, rename, or remove. Use the scripts t
 ```
 src/
    <SolutionName>/
-      dotFitness.Api/                # API composition root (example name)
-      dotFitness.SharedKernel/       # Cross-cutting primitives (no domain logic)
+      App.Api/                # API composition root (example name)
+      App.SharedKernel/       # Cross-cutting primitives (no domain logic)
       Modules/
          Users/                       # Example module
          Exercises/                   # Example module
@@ -37,11 +37,11 @@ scripts/
 
 Module skeleton (per feature):
 ```
-dotFitness.Modules.{Module}/
-   dotFitness.Modules.{Module}.Domain/
-   dotFitness.Modules.{Module}.Application/
-   dotFitness.Modules.{Module}.Infrastructure/
-   dotFitness.Modules.{Module}.Tests/
+App.Modules.{Module}/
+   App.Modules.{Module}.Domain/
+   App.Modules.{Module}.Application/
+   App.Modules.{Module}.Infrastructure/
+   App.Modules.{Module}.Tests/
 ```
 
 ## Use this template
@@ -65,15 +65,15 @@ Prerequisites:
 Steps:
 1) Start MongoDB (optional if you already have one):
     - From solution folder with docker-compose.yml:
-       - src/dotFitness.WorkoutTracker/docker-compose.yml
+       - src/App.ModularMonolith/docker-compose.yml
 2) Restore, build, run:
     - dotnet restore
     - dotnet build
-    - dotnet run --project src/dotFitness.WorkoutTracker/dotFitness.Api
+    - dotnet run --project src/App.ModularMonolith/App.Api
 
 When the API starts, check the console for the URLs (Swagger UI is served at the root by default in this template). Health endpoint is typically /health.
 
-Configuration (development) lives in `src/dotFitness.WorkoutTracker/dotFitness.Api/appsettings.Development.json`. Common keys:
+Configuration (development) lives in `src/App.ModularMonolith/App.Api/appsettings.Development.json`. Common keys:
 - ConnectionStrings:MongoDB
 - JwtSettings:SecretKey, Issuer, Audience, ExpirationHours
 
@@ -98,7 +98,7 @@ Example product docs (UI/URS/feature lists) have been removed to keep this templ
 ## Testing
 
 - Run all tests: dotnet test
-- Add per-module test projects under dotFitness.Modules.{Module}.Tests
+- Add per-module test projects under App.Modules.{Module}.Tests
 
 ## License
 

@@ -1,10 +1,10 @@
-# Add Comprehensive Tests for dotFitness Module - GitHub Copilot Instructions
+# Add Comprehensive Tests for App Module - GitHub Copilot Instructions
 
 ## Overview
-This prompt guides GitHub Copilot to create comprehensive test suites for dotFitness modules following established testing patterns, ensuring reliability, maintainability, and consistent quality.
+This prompt guides GitHub Copilot to create comprehensive test suites for App modules following established testing patterns, ensuring reliability, maintainability, and consistent quality.
 
 ## When to Use This Prompt
-Use this prompt when you need to add complete test coverage for an existing dotFitness module or enhance existing tests to meet quality standards.
+Use this prompt when you need to add complete test coverage for an existing App module or enhance existing tests to meet quality standards.
 
 ## Testing Architecture Context
 - **Framework**: xUnit with FluentAssertions and Moq
@@ -18,7 +18,7 @@ Use this prompt when you need to add complete test coverage for an existing dotF
 Create the following comprehensive test structure for the module:
 
 ```
-dotFitness.Modules.[ModuleName].Tests/
+App.Modules.[ModuleName].Tests/
 ├── Domain/
 │   └── Entities/
 │       ├── [Entity]Tests.cs           # Comprehensive entity tests
@@ -590,10 +590,10 @@ Content-Type: application/json
 
 ```bash
 # Run all tests for the module
-dotnet test dotFitness.Modules.[ModuleName].Tests/
+dotnet test App.Modules.[ModuleName].Tests/
 
 # Run with coverage
-dotnet test dotFitness.Modules.[ModuleName].Tests/ --collect:"XPlat Code Coverage"
+dotnet test App.Modules.[ModuleName].Tests/ --collect:"XPlat Code Coverage"
 
 # Run specific test class
 dotnet test --filter "ClassName=[Entity]Tests"
@@ -624,4 +624,4 @@ After implementing tests, verify:
 - [ ] Test data builders provide consistent test data
 - [ ] All tests are isolated and don't affect each other
 
-This comprehensive testing approach ensures high-quality, maintainable test suites that provide confidence in the dotFitness application's reliability and correctness.
+This comprehensive testing approach ensures high-quality, maintainable test suites that provide confidence in the App application's reliability and correctness.

@@ -1,8 +1,8 @@
-# Adding a New Module to dotFitness
+# Adding a New Module to App
 
 > Based on modular monolith best practices from [modular-monolith-with-ddd](https://github.com/MaiQD/modular-monolith-with-ddd/blob/master/README.md)
 
-This guide walks you through creating a new module in the dotFitness modular monolith architecture. Each module follows Clean Architecture principles with Domain-Driven Design (DDD) patterns.
+This guide walks you through creating a new module in the App modular monolith architecture. Each module follows Clean Architecture principles with Domain-Driven Design (DDD) patterns.
 
 ## 🎯 Module Architecture Overview
 
@@ -15,24 +15,24 @@ Each module is a **vertical slice** that contains:
 ## 📁 Module Structure Template
 
 ```
-dotFitness.Modules.{ModuleName}/
-├── dotFitness.Modules.{ModuleName}.Domain/
+App.Modules.{ModuleName}/
+├── App.Modules.{ModuleName}.Domain/
 │   ├── Entities/
 │   ├── Events/
 │   └── Repositories/
-├── dotFitness.Modules.{ModuleName}.Application/
+├── App.Modules.{ModuleName}.Application/
 │   ├── Commands/
 │   ├── Queries/
 │   ├── DTOs/
 │   ├── Mappers/
 │   ├── Validators/
 │   └── Configuration/
-├── dotFitness.Modules.{ModuleName}.Infrastructure/
+├── App.Modules.{ModuleName}.Infrastructure/
 │   ├── Handlers/
 │   ├── Repositories/
 │   ├── Configuration/
 │   └── Settings/
-└── dotFitness.Modules.{ModuleName}.Tests/
+└── App.Modules.{ModuleName}.Tests/
     ├── Domain/
     ├── Application/
     ├── Infrastructure/
@@ -47,32 +47,32 @@ Create the four core projects for your module:
 
 ```bash
 # Create Domain project
-dotnet new classlib -n dotFitness.Modules.{ModuleName}.Domain
-dotnet new classlib -n dotFitness.Modules.{ModuleName}.Application
-dotnet new classlib -n dotFitness.Modules.{ModuleName}.Infrastructure
-dotnet new xunit -n dotFitness.Modules.{ModuleName}.Tests
+dotnet new classlib -n App.Modules.{ModuleName}.Domain
+dotnet new classlib -n App.Modules.{ModuleName}.Application
+dotnet new classlib -n App.Modules.{ModuleName}.Infrastructure
+dotnet new xunit -n App.Modules.{ModuleName}.Tests
 ```
 
 ### Step 2: Set Up Project References
 
 ```bash
 # Domain project references
-dotnet add dotFitness.Modules.{ModuleName}.Domain/dotFitness.Modules.{ModuleName}.Domain.csproj reference dotFitness.SharedKernel/dotFitness.SharedKernel.csproj
+dotnet add App.Modules.{ModuleName}.Domain/App.Modules.{ModuleName}.Domain.csproj reference App.SharedKernel/App.SharedKernel.csproj
 
 # Application project references
-dotnet add dotFitness.Modules.{ModuleName}.Application/dotFitness.Modules.{ModuleName}.Application.csproj reference dotFitness.Modules.{ModuleName}.Domain/dotFitness.Modules.{ModuleName}.Domain.csproj
-dotnet add dotFitness.Modules.{ModuleName}.Application/dotFitness.Modules.{ModuleName}.Application.csproj reference dotFitness.SharedKernel/dotFitness.SharedKernel.csproj
+dotnet add App.Modules.{ModuleName}.Application/App.Modules.{ModuleName}.Application.csproj reference App.Modules.{ModuleName}.Domain/App.Modules.{ModuleName}.Domain.csproj
+dotnet add App.Modules.{ModuleName}.Application/App.Modules.{ModuleName}.Application.csproj reference App.SharedKernel/App.SharedKernel.csproj
 
 # Infrastructure project references
-dotnet add dotFitness.Modules.{ModuleName}.Infrastructure/dotFitness.Modules.{ModuleName}.Infrastructure.csproj reference dotFitness.Modules.{ModuleName}.Domain/dotFitness.Modules.{ModuleName}.Domain.csproj
-dotnet add dotFitness.Modules.{ModuleName}.Infrastructure/dotFitness.Modules.{ModuleName}.Infrastructure.csproj reference dotFitness.Modules.{ModuleName}.Application/dotFitness.Modules.{ModuleName}.Application.csproj
-dotnet add dotFitness.Modules.{ModuleName}.Infrastructure/dotFitness.Modules.{ModuleName}.Infrastructure.csproj reference dotFitness.SharedKernel/dotFitness.SharedKernel.csproj
+dotnet add App.Modules.{ModuleName}.Infrastructure/App.Modules.{ModuleName}.Infrastructure.csproj reference App.Modules.{ModuleName}.Domain/App.Modules.{ModuleName}.Domain.csproj
+dotnet add App.Modules.{ModuleName}.Infrastructure/App.Modules.{ModuleName}.Infrastructure.csproj reference App.Modules.{ModuleName}.Application/App.Modules.{ModuleName}.Application.csproj
+dotnet add App.Modules.{ModuleName}.Infrastructure/App.Modules.{ModuleName}.Infrastructure.csproj reference App.SharedKernel/App.SharedKernel.csproj
 
 # Tests project references
-dotnet add dotFitness.Modules.{ModuleName}.Tests/dotFitness.Modules.{ModuleName}.Tests.csproj reference dotFitness.Modules.{ModuleName}.Domain/dotFitness.Modules.{ModuleName}.Domain.csproj
-dotnet add dotFitness.Modules.{ModuleName}.Tests/dotFitness.Modules.{ModuleName}.Tests.csproj reference dotFitness.Modules.{ModuleName}.Application/dotFitness.Modules.{ModuleName}.Application.csproj
-dotnet add dotFitness.Modules.{ModuleName}.Tests/dotFitness.Modules.{ModuleName}.Tests.csproj reference dotFitness.Modules.{ModuleName}.Infrastructure/dotFitness.Modules.{ModuleName}.Infrastructure.csproj
-dotnet add dotFitness.Modules.{ModuleName}.Tests/dotFitness.Modules.{ModuleName}.Tests.csproj reference dotFitness.SharedKernel/dotFitness.SharedKernel.csproj
+dotnet add App.Modules.{ModuleName}.Tests/App.Modules.{ModuleName}.Tests.csproj reference App.Modules.{ModuleName}.Domain/App.Modules.{ModuleName}.Domain.csproj
+dotnet add App.Modules.{ModuleName}.Tests/App.Modules.{ModuleName}.Tests.csproj reference App.Modules.{ModuleName}.Application/App.Modules.{ModuleName}.Application.csproj
+dotnet add App.Modules.{ModuleName}.Tests/App.Modules.{ModuleName}.Tests.csproj reference App.Modules.{ModuleName}.Infrastructure/App.Modules.{ModuleName}.Infrastructure.csproj
+dotnet add App.Modules.{ModuleName}.Tests/App.Modules.{ModuleName}.Tests.csproj reference App.SharedKernel/App.SharedKernel.csproj
 ```
 
 ### Step 3: Add Required NuGet Packages
@@ -119,10 +119,10 @@ dotnet add dotFitness.Modules.{ModuleName}.Tests/dotFitness.Modules.{ModuleName}
 
 #### 1. Create Domain Entity
 ```csharp
-// dotFitness.Modules.{ModuleName}.Domain/Entities/{EntityName}.cs
-using dotFitness.SharedKernel.Interfaces;
+// App.Modules.{ModuleName}.Domain/Entities/{EntityName}.cs
+using App.SharedKernel.Interfaces;
 
-namespace dotFitness.Modules.{ModuleName}.Domain.Entities;
+namespace App.Modules.{ModuleName}.Domain.Entities;
 
 public class {EntityName} : IEntity
 {
@@ -146,10 +146,10 @@ public class {EntityName} : IEntity
 
 #### 2. Create Domain Events
 ```csharp
-// dotFitness.Modules.{ModuleName}.Domain/Events/{EntityName}CreatedEvent.cs
+// App.Modules.{ModuleName}.Domain/Events/{EntityName}CreatedEvent.cs
 using MediatR;
 
-namespace dotFitness.Modules.{ModuleName}.Domain.Events;
+namespace App.Modules.{ModuleName}.Domain.Events;
 
 public class {EntityName}CreatedEvent : INotification
 {
@@ -161,8 +161,8 @@ public class {EntityName}CreatedEvent : INotification
 
 #### 3. Create Repository Interface
 ```csharp
-// dotFitness.Modules.{ModuleName}.Domain/Repositories/I{EntityName}Repository.cs
-namespace dotFitness.Modules.{ModuleName}.Domain.Repositories;
+// App.Modules.{ModuleName}.Domain/Repositories/I{EntityName}Repository.cs
+namespace App.Modules.{ModuleName}.Domain.Repositories;
 
 public interface I{EntityName}Repository
 {
@@ -180,12 +180,12 @@ public interface I{EntityName}Repository
 
 #### 1. Create Commands
 ```csharp
-// dotFitness.Modules.{ModuleName}.Application/Commands/Create{EntityName}Command.cs
+// App.Modules.{ModuleName}.Application/Commands/Create{EntityName}Command.cs
 using MediatR;
-using dotFitness.SharedKernel.Results;
-using dotFitness.Modules.{ModuleName}.Application.DTOs;
+using App.SharedKernel.Results;
+using App.Modules.{ModuleName}.Application.DTOs;
 
-namespace dotFitness.Modules.{ModuleName}.Application.Commands;
+namespace App.Modules.{ModuleName}.Application.Commands;
 
 public class Create{EntityName}Command : IRequest<Result<{EntityName}Dto>>
 {
@@ -196,12 +196,12 @@ public class Create{EntityName}Command : IRequest<Result<{EntityName}Dto>>
 
 #### 2. Create Queries
 ```csharp
-// dotFitness.Modules.{ModuleName}.Application/Queries/Get{EntityName}ByIdQuery.cs
+// App.Modules.{ModuleName}.Application/Queries/Get{EntityName}ByIdQuery.cs
 using MediatR;
-using dotFitness.SharedKernel.Results;
-using dotFitness.Modules.{ModuleName}.Application.DTOs;
+using App.SharedKernel.Results;
+using App.Modules.{ModuleName}.Application.DTOs;
 
-namespace dotFitness.Modules.{ModuleName}.Application.Queries;
+namespace App.Modules.{ModuleName}.Application.Queries;
 
 public class Get{EntityName}ByIdQuery : IRequest<Result<{EntityName}Dto>>
 {
@@ -211,8 +211,8 @@ public class Get{EntityName}ByIdQuery : IRequest<Result<{EntityName}Dto>>
 
 #### 3. Create DTOs
 ```csharp
-// dotFitness.Modules.{ModuleName}.Application/DTOs/{EntityName}Dto.cs
-namespace dotFitness.Modules.{ModuleName}.Application.DTOs;
+// App.Modules.{ModuleName}.Application/DTOs/{EntityName}Dto.cs
+namespace App.Modules.{ModuleName}.Application.DTOs;
 
 public class {EntityName}Dto
 {
@@ -226,11 +226,11 @@ public class {EntityName}Dto
 
 #### 4. Create Static Mappers
 ```csharp
-// dotFitness.Modules.{ModuleName}.Application/Mappers/{EntityName}Mapper.cs
-using dotFitness.Modules.{ModuleName}.Domain.Entities;
-using dotFitness.Modules.{ModuleName}.Application.DTOs;
+// App.Modules.{ModuleName}.Application/Mappers/{EntityName}Mapper.cs
+using App.Modules.{ModuleName}.Domain.Entities;
+using App.Modules.{ModuleName}.Application.DTOs;
 
-namespace dotFitness.Modules.{ModuleName}.Application.Mappers;
+namespace App.Modules.{ModuleName}.Application.Mappers;
 
 public static class {EntityName}Mapper
 {
@@ -256,11 +256,11 @@ public static class {EntityName}Mapper
 
 #### 5. Create Validators
 ```csharp
-// dotFitness.Modules.{ModuleName}.Application/Validators/Create{EntityName}CommandValidator.cs
+// App.Modules.{ModuleName}.Application/Validators/Create{EntityName}CommandValidator.cs
 using FluentValidation;
-using dotFitness.Modules.{ModuleName}.Application.Commands;
+using App.Modules.{ModuleName}.Application.Commands;
 
-namespace dotFitness.Modules.{ModuleName}.Application.Validators;
+namespace App.Modules.{ModuleName}.Application.Validators;
 
 public class Create{EntityName}CommandValidator : AbstractValidator<Create{EntityName}Command>
 {
@@ -278,12 +278,12 @@ public class Create{EntityName}CommandValidator : AbstractValidator<Create{Entit
 
 #### 6. Create Module Registration
 ```csharp
-// dotFitness.Modules.{ModuleName}.Application/Configuration/{ModuleName}ModuleRegistration.cs
+// App.Modules.{ModuleName}.Application/Configuration/{ModuleName}ModuleRegistration.cs
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
-using dotFitness.Modules.{ModuleName}.Application.Validators;
+using App.Modules.{ModuleName}.Application.Validators;
 
-namespace dotFitness.Modules.{ModuleName}.Application.Configuration;
+namespace App.Modules.{ModuleName}.Application.Configuration;
 
 public static class {ModuleName}ModuleRegistration
 {
@@ -304,17 +304,17 @@ public static class {ModuleName}ModuleRegistration
 
 #### 1. Create Command Handlers
 ```csharp
-// dotFitness.Modules.{ModuleName}.Infrastructure/Handlers/Create{EntityName}CommandHandler.cs
+// App.Modules.{ModuleName}.Infrastructure/Handlers/Create{EntityName}CommandHandler.cs
 using MediatR;
-using dotFitness.SharedKernel.Results;
-using dotFitness.Modules.{ModuleName}.Domain.Entities;
-using dotFitness.Modules.{ModuleName}.Domain.Repositories;
-using dotFitness.Modules.{ModuleName}.Domain.Events;
-using dotFitness.Modules.{ModuleName}.Application.Commands;
-using dotFitness.Modules.{ModuleName}.Application.DTOs;
-using dotFitness.Modules.{ModuleName}.Application.Mappers;
+using App.SharedKernel.Results;
+using App.Modules.{ModuleName}.Domain.Entities;
+using App.Modules.{ModuleName}.Domain.Repositories;
+using App.Modules.{ModuleName}.Domain.Events;
+using App.Modules.{ModuleName}.Application.Commands;
+using App.Modules.{ModuleName}.Application.DTOs;
+using App.Modules.{ModuleName}.Application.Mappers;
 
-namespace dotFitness.Modules.{ModuleName}.Infrastructure.Handlers;
+namespace App.Modules.{ModuleName}.Infrastructure.Handlers;
 
 public class Create{EntityName}CommandHandler : IRequestHandler<Create{EntityName}Command, Result<{EntityName}Dto>>
 {
@@ -370,15 +370,15 @@ public class Create{EntityName}CommandHandler : IRequestHandler<Create{EntityNam
 
 #### 2. Create Query Handlers
 ```csharp
-// dotFitness.Modules.{ModuleName}.Infrastructure/Handlers/Get{EntityName}ByIdQueryHandler.cs
+// App.Modules.{ModuleName}.Infrastructure/Handlers/Get{EntityName}ByIdQueryHandler.cs
 using MediatR;
-using dotFitness.SharedKernel.Results;
-using dotFitness.Modules.{ModuleName}.Domain.Repositories;
-using dotFitness.Modules.{ModuleName}.Application.Queries;
-using dotFitness.Modules.{ModuleName}.Application.DTOs;
-using dotFitness.Modules.{ModuleName}.Application.Mappers;
+using App.SharedKernel.Results;
+using App.Modules.{ModuleName}.Domain.Repositories;
+using App.Modules.{ModuleName}.Application.Queries;
+using App.Modules.{ModuleName}.Application.DTOs;
+using App.Modules.{ModuleName}.Application.Mappers;
 
-namespace dotFitness.Modules.{ModuleName}.Infrastructure.Handlers;
+namespace App.Modules.{ModuleName}.Infrastructure.Handlers;
 
 public class Get{EntityName}ByIdQueryHandler : IRequestHandler<Get{EntityName}ByIdQuery, Result<{EntityName}Dto>>
 {
@@ -411,12 +411,12 @@ public class Get{EntityName}ByIdQueryHandler : IRequestHandler<Get{EntityName}By
 
 #### 3. Create Repository Implementation
 ```csharp
-// dotFitness.Modules.{ModuleName}.Infrastructure/Repositories/{EntityName}Repository.cs
+// App.Modules.{ModuleName}.Infrastructure/Repositories/{EntityName}Repository.cs
 using MongoDB.Driver;
-using dotFitness.Modules.{ModuleName}.Domain.Entities;
-using dotFitness.Modules.{ModuleName}.Domain.Repositories;
+using App.Modules.{ModuleName}.Domain.Entities;
+using App.Modules.{ModuleName}.Domain.Repositories;
 
-namespace dotFitness.Modules.{ModuleName}.Infrastructure.Repositories;
+namespace App.Modules.{ModuleName}.Infrastructure.Repositories;
 
 public class {EntityName}Repository : I{EntityName}Repository
 {
@@ -466,14 +466,14 @@ public class {EntityName}Repository : I{EntityName}Repository
 
 #### 4. Create Infrastructure Module Registration
 ```csharp
-// dotFitness.Modules.{ModuleName}.Infrastructure/Configuration/{ModuleName}InfrastructureModule.cs
+// App.Modules.{ModuleName}.Infrastructure/Configuration/{ModuleName}InfrastructureModule.cs
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
-using dotFitness.Modules.{ModuleName}.Domain.Repositories;
-using dotFitness.Modules.{ModuleName}.Infrastructure.Repositories;
+using App.Modules.{ModuleName}.Domain.Repositories;
+using App.Modules.{ModuleName}.Infrastructure.Repositories;
 
-namespace dotFitness.Modules.{ModuleName}.Infrastructure.Configuration;
+namespace App.Modules.{ModuleName}.Infrastructure.Configuration;
 
 public static class {ModuleName}InfrastructureModule
 {
@@ -491,11 +491,11 @@ public static class {ModuleName}InfrastructureModule
 
 #### 1. Domain Tests
 ```csharp
-// dotFitness.Modules.{ModuleName}.Tests/Domain/Entities/{EntityName}Tests.cs
+// App.Modules.{ModuleName}.Tests/Domain/Entities/{EntityName}Tests.cs
 using FluentAssertions;
-using dotFitness.Modules.{ModuleName}.Domain.Entities;
+using App.Modules.{ModuleName}.Domain.Entities;
 
-namespace dotFitness.Modules.{ModuleName}.Tests.Domain.Entities;
+namespace App.Modules.{ModuleName}.Tests.Domain.Entities;
 
 public class {EntityName}Tests
 {
@@ -533,13 +533,13 @@ public class {EntityName}Tests
 
 #### 2. Application Tests
 ```csharp
-// dotFitness.Modules.{ModuleName}.Tests/Application/Validators/Create{EntityName}CommandValidatorTests.cs
+// App.Modules.{ModuleName}.Tests/Application/Validators/Create{EntityName}CommandValidatorTests.cs
 using FluentAssertions;
 using FluentValidation.TestHelper;
-using dotFitness.Modules.{ModuleName}.Application.Commands;
-using dotFitness.Modules.{ModuleName}.Application.Validators;
+using App.Modules.{ModuleName}.Application.Commands;
+using App.Modules.{ModuleName}.Application.Validators;
 
-namespace dotFitness.Modules.{ModuleName}.Tests.Application.Validators;
+namespace App.Modules.{ModuleName}.Tests.Application.Validators;
 
 public class Create{EntityName}CommandValidatorTests
 {
@@ -590,7 +590,7 @@ public class Create{EntityName}CommandValidatorTests
 
 #### 1. Add Module to ModuleRegistry
 ```csharp
-// In dotFitness.Api/Infrastructure/ModuleRegistry.cs
+// In App.Api/Infrastructure/ModuleRegistry.cs
 public static readonly string[] ModuleNames = 
 {
     "Users",
@@ -603,13 +603,13 @@ public static readonly string[] ModuleNames =
 
 #### 2. Add API Controller
 ```csharp
-// dotFitness.Api/Controllers/{ModuleName}Controller.cs
+// App.Api/Controllers/{ModuleName}Controller.cs
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
-using dotFitness.Modules.{ModuleName}.Application.Commands;
-using dotFitness.Modules.{ModuleName}.Application.Queries;
+using App.Modules.{ModuleName}.Application.Commands;
+using App.Modules.{ModuleName}.Application.Queries;
 
-namespace dotFitness.Api.Controllers;
+namespace App.Api.Controllers;
 
 [ApiController]
 [Route("api/v1/[controller]")]
@@ -642,10 +642,10 @@ public class {ModuleName}Controller : ControllerBase
 ### Step 9: Configure MongoDB Indexes
 
 ```csharp
-// dotFitness.Modules.{ModuleName}.Infrastructure/Configuration/{ModuleName}IndexConfiguration.cs
+// App.Modules.{ModuleName}.Infrastructure/Configuration/{ModuleName}IndexConfiguration.cs
 using MongoDB.Driver;
 
-namespace dotFitness.Modules.{ModuleName}.Infrastructure.Configuration;
+namespace App.Modules.{ModuleName}.Infrastructure.Configuration;
 
 public static class {ModuleName}IndexConfiguration
 {
@@ -696,7 +696,7 @@ public static class {ModuleName}IndexConfiguration
 ```json
 {
   "{ModuleName}": {
-    "DatabaseName": "dotFitness",
+    "DatabaseName": "App",
     "CollectionName": "{entityNames}"
   }
 }

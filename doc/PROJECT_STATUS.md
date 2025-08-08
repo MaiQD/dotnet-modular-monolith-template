@@ -1,12 +1,12 @@
 > NOTE: Example project status document. Not part of the reusable template. Safe to remove in your app.
 
-# dotFitness Project Status
+# App Project Status
 
 > Last Updated: June 2025
 
 ## 🎯 Project Overview
 
-The dotFitness workout tracker is a **Modular Monolith** built with Clean Architecture, featuring automatic module discovery, CQRS with MediatR, and MongoDB with optimized indexes.
+The App workout tracker is a **Modular Monolith** built with Clean Architecture, featuring automatic module discovery, CQRS with MediatR, and MongoDB with optimized indexes.
 
 ## 📊 Current Implementation Status
 
@@ -168,7 +168,7 @@ The dotFitness workout tracker is a **Modular Monolith** built with Clean Archit
 
 ## 🎉 Success Metrics
 
-The dotFitness project demonstrates:
+The App project demonstrates:
 - ✅ **Clean Architecture** implementation
 - ✅ **Modular Monolith** scalability
 - ✅ **Zero-configuration** module system
