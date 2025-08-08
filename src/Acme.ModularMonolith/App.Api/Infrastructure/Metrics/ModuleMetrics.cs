@@ -84,29 +84,8 @@ public static class ModuleMetrics
         }
     }
 
-    /// <summary>
-    /// Records MongoDB index configuration metrics
-    /// </summary>
-    /// <param name="moduleName">Name of the module</param>
-    /// <param name="indexCount">Number of indexes configured</param>
-    /// <param name="duration">Time taken for configuration</param>
-    /// <param name="logger">Logger for recording metrics</param>
-    public static void RecordIndexConfiguration(string moduleName, int indexCount, TimeSpan duration, ILogger logger)
-    {
-        lock (_lockObject)
-        {
-            if (!_moduleMetrics.ContainsKey(moduleName))
-            {
-                _moduleMetrics[moduleName] = new ModuleRegistrationMetrics(moduleName);
-            }
-
-            var metrics = _moduleMetrics[moduleName];
-            metrics.RecordIndexConfiguration(indexCount, duration);
-
-            logger.LogInformation("Index configuration metrics - {ModuleName}: Indexes={IndexCount}, Duration={Duration}ms",
-                moduleName, indexCount, duration.TotalMilliseconds);
-        }
-    }
+    // Removed Mongo index metrics in EF-only template. Keep method no-op for API compatibility.
+    public static void RecordIndexConfiguration(string moduleName, int indexCount, TimeSpan duration, ILogger logger) { }
 
     /// <summary>
     /// Gets comprehensive metrics for all modules

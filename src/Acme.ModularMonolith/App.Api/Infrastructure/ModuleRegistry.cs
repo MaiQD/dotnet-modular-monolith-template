@@ -228,24 +228,8 @@ public static class ModuleRegistry
         }
     }
 
-    /// <summary>
-    /// Configures MongoDB indexes for all modules
-    /// </summary>
-    /// <param name="services">Service provider</param>
-    public static async Task ConfigureAllModuleIndexes(IServiceProvider services)
-    {
-        foreach (var moduleName in ModuleNames)
-        {
-            try
-            {
-                await ConfigureModuleIndexes(services, moduleName);
-            }
-            catch (Exception ex)
-            {
-                LogWarning("Could not configure indexes for module {ModuleName}: {Error}", moduleName, ex.Message);
-            }
-        }
-    }
+    // MongoDB index configuration removed for EF Core–only template
+    public static Task ConfigureAllModuleIndexes(IServiceProvider services) => Task.CompletedTask;
 
     /// <summary>
     /// Seeds data for all modules
@@ -301,63 +285,5 @@ public static class ModuleRegistry
     /// </summary>
     /// <param name="services">Service provider</param>
     /// <param name="moduleName">Name of the module</param>
-    private static async Task ConfigureModuleIndexes(IServiceProvider services, string moduleName)
-    {
-        try
-        {
-            // Pre-load Infrastructure assembly from the file system
-            var infrastructureAssemblyPath = Path.Combine(AppContext.BaseDirectory, $"App.Modules.{moduleName}.Infrastructure.dll");
-            if (File.Exists(infrastructureAssemblyPath))
-            {
-                try
-                {
-                    var infrastructureAssembly = System.Reflection.Assembly.LoadFrom(infrastructureAssemblyPath);
-                    
-                    // Look for Infrastructure module configuration class
-                    var configurationTypeName = $"App.Modules.{moduleName}.Infrastructure.Configuration.{moduleName}InfrastructureModule";
-                    var configurationType = infrastructureAssembly.GetType(configurationTypeName);
-                    
-                    if (configurationType != null)
-                    {
-                        // Look for Configure*ModuleIndexes method
-                        var configureIndexesMethod = configurationType.GetMethod($"Configure{moduleName}ModuleIndexes", 
-                            System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
-                        
-                        if (configureIndexesMethod != null)
-                        {
-                            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-                            var task = (Task?)configureIndexesMethod.Invoke(null, new object[] { services });
-                            if (task != null)
-                            {
-                                await task;
-                                stopwatch.Stop();
-                                // Estimate index count based on module name (this could be made more sophisticated)
-                                var estimatedIndexCount = moduleName.ToLowerInvariant() switch
-                                {
-                                    "users" => 8, // User + UserMetric indexes
-                                    "exercises" => 9, // Exercise + MuscleGroup + Equipment indexes
-                                    _ => 5 // Default estimate
-                                };
-                                ModuleMetrics.RecordIndexConfiguration(moduleName, estimatedIndexCount, stopwatch.Elapsed, _logger!);
-                                LogInformation("Successfully configured indexes for module: {ModuleName}", moduleName);
-                                return;
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    LogWarning("Could not configure {ModuleName} module indexes: {Error}", moduleName, ex.Message);
-                }
-            }
-            else
-            {
-                LogWarning("Infrastructure assembly not found for module: {ModuleName}", moduleName);
-            }
-        }
-        catch (Exception ex)
-        {
-            LogWarning("Failed to configure indexes for module {ModuleName}: {Error}", moduleName, ex.Message);
-        }
-    }
+    private static Task ConfigureModuleIndexes(IServiceProvider services, string moduleName) => Task.CompletedTask;
 }
