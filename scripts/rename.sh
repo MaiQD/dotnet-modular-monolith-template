@@ -30,8 +30,8 @@ build_file_list() {
 }
 
 # Replace solution identifier first (more specific), then root namespace
-build_file_list | xargs -0 sed "${SED_INPLACE[@]}" -e "s/dotFitness.WorkoutTracker/${NEW_SOLUTION_NAME}/g"
-build_file_list | xargs -0 sed "${SED_INPLACE[@]}" -e "s/dotFitness/${NEW_NS}/g"
+build_file_list | xargs -0 sed "${SED_INPLACE[@]}" -e "s/App.ModularMonolith/${NEW_SOLUTION_NAME}/g"
+build_file_list | xargs -0 sed "${SED_INPLACE[@]}" -e "s/App/${NEW_NS}/g"
 
 # Rename solution directory
 if [[ -d "src/${OLD_SOLUTION_DIR}" && "${OLD_SOLUTION_DIR}" != "${NEW_SOLUTION_NAME}" ]]; then
@@ -52,7 +52,8 @@ for COMPOSE_PATH in "src/${OLD_SOLUTION_DIR}/docker-compose.yml" "src/${NEW_SOLU
       -e "s/^\([[:space:]]*container_name:[[:space:]]*\).*-postgres$/\1${SOLUTION_SLUG}-postgres/" \
       -e "s/^\([[:space:]]*container_name:[[:space:]]*\).*-pgadmin$/\1${SOLUTION_SLUG}-pgadmin/" \
       -e "s/^\([[:space:]]*POSTGRES_DB:[[:space:]]*\).*/\1${DB_NAME}/" \
-      -e "s/\b[[:alnum:]-]*-network\b/${SOLUTION_SLUG}-network/g" \
+      -E -e "s/^([[:space:]]*-[[:space:]]*)[A-Za-z0-9_-]+-network(\s*)$/\1${SOLUTION_SLUG}-network\2/" \
+      -E -e "s/^([[:space:]]+)[A-Za-z0-9_-]+-network:(\s*)$/\1${SOLUTION_SLUG}-network:\2/" \
       "${COMPOSE_PATH}"
   fi
 done
@@ -63,6 +64,6 @@ echo "Renamed namespaces to ${NEW_NS} and solution to ${NEW_SOLUTION_NAME}. Revi
 while IFS= read -r -d '' APPSET_FILE; do
   sed "${SED_INPLACE[@]}" -E \
     -e "s/(Database=)[^;]*/\\1${DB_NAME}/g" \
-    -e "s/dotFitnessDb/${MONGO_DB_NAME}/g" \
+    -e "s/AppDb/${MONGO_DB_NAME}/g" \
     "${APPSET_FILE}"
 done < <(find src -type f -name "appsettings*.json" -print0)
