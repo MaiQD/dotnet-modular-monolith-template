@@ -42,7 +42,7 @@ public static class ModuleRegistry
     /// </summary>
     public static readonly string[] ModuleNames = 
     {
-        "Users"
+        "Identity"
     };
 
     /// <summary>

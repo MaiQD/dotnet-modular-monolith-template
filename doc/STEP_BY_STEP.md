@@ -13,25 +13,20 @@ This guide provides a comprehensive step-by-step approach to developing features
 3. **Create Solution File:** Execute `dotnet new sln -n App.ModularMonolith`.
 4. **Create Backend API Project:** Execute `dotnet new webapi -n App.Api`.
 5. **Create Shared Kernel Project:** Execute `dotnet new classlib -n App.SharedKernel`.
-6. **Create Users Module - Application Layer Project:** Execute `dotnet new classlib -n App.Modules.Users.Application`.
-7. **Create Users Module - Domain Layer Project:** Execute `dotnet new classlib -n App.Modules.Users.Domain`.
-8. **Create Users Module - Infrastructure Layer Project:** Execute `dotnet new classlib -n App.Modules.Users.Infrastructure`.
-9. **Create Users Module - Tests Project:** Execute `dotnet new xunit -n App.Modules.Users.Tests`.
+6. Create Identity Module - Application Layer Project: `dotnet new classlib -n App.Modules.Identity.Application`.
+7. Create Identity Module - Infrastructure Layer Project: `dotnet new classlib -n App.Modules.Identity.Infrastructure`.
 10. **Add All Created Projects to Solution:** Execute `dotnet sln add **/*.csproj`.
-11. **Add Project References - App.Api:**
+11. Add Project References - App.Api:
     - `dotnet add App.Api/App.Api.csproj reference App.SharedKernel/App.SharedKernel.csproj`
-    - `dotnet add App.Api/App.Api.csproj reference App.Modules.Users.Application/App.Modules.Users.Application.csproj`
+    - `dotnet add App.Api/App.Api.csproj reference App.Modules.Identity.Application/App.Modules.Identity.Application.csproj`
     - *(Repeat this for all other `.Application` modules as they are created later: Exercises, Routines, WorkoutLogs)*
     - **Note:** Following Clean Architecture principles, the API project should only reference Application layers and SharedKernel. Infrastructure dependencies are managed through the generic module registration system.
 12. **Add Project References - App.SharedKernel:** (No outgoing references from SharedKernel)
-13. **Add Project References - App.Modules.Users.Application:**
-    - `dotnet add App.Modules.Users.Application/App.Modules.Users.Application.csproj reference App.SharedKernel/App.SharedKernel.csproj`
-14. **Add Project References - App.Modules.Users.Domain:**
-    - `dotnet add App.Modules.Users.Domain/App.Modules.Users.Domain.csproj reference App.SharedKernel/App.SharedKernel.csproj`
-15. **Add Project References - App.Modules.Users.Infrastructure:**
-    - `dotnet add App.Modules.Users.Infrastructure/App.Modules.Users.Infrastructure.csproj reference App.Modules.Users.Domain/App.Modules.Users.Domain.csproj`
-    - `dotnet add App.Modules.Users.Infrastructure/App.Modules.Users.Infrastructure.csproj reference App.Modules.Users.Application/App.Modules.Users.Application.csproj`
-    - `dotnet add App.Modules.Users.Infrastructure/App.Modules.Users.Infrastructure.csproj reference App.SharedKernel/App.SharedKernel.csproj`
+13. Add Project References - App.Modules.Identity.Application:
+    - `dotnet add App.Modules.Identity.Application/App.Modules.Identity.Application.csproj reference App.SharedKernel/App.SharedKernel.csproj`
+15. Add Project References - App.Modules.Identity.Infrastructure:
+    - `dotnet add App.Modules.Identity.Infrastructure/App.Modules.Identity.Infrastructure.csproj reference App.Modules.Identity.Application/App.Modules.Identity.Application.csproj`
+    - `dotnet add App.Modules.Identity.Infrastructure/App.Modules.Identity.Infrastructure.csproj reference App.SharedKernel/App.SharedKernel.csproj`
 16. **Add Project References - App.Modules.Users.Tests:**
     - `dotnet add App.Modules.Users.Tests/App.Modules.Users.Tests.csproj reference App.Modules.Users.Application/App.Modules.Users.Application.csproj`
     - `dotnet add App.Modules.Users.Tests/App.Modules.Users.Tests.csproj reference App.Modules.Users.Domain/App.Modules.Users.Domain.csproj`
@@ -57,8 +52,7 @@ This guide provides a comprehensive step-by-step approach to developing features
 20. **Setup Local MongoDB with Docker Compose:**
     - Create file `App.ModularMonolith/docker-compose.yml` with the MongoDB service definition.
     - Execute `docker compose up -d` in the `App.ModularMonolith` directory to start the MongoDB container.
-21. **Configure `App.Api` - Add NuGet Packages:**
-    - `dotnet add App.Api/App.Api.csproj package MongoDB.Driver`
+21. Configure `App.Api` - Add NuGet Packages:
     - `dotnet add App.Api/App.Api.csproj package Serilog.AspNetCore`
     - `dotnet add App.Api/App.Api.csproj package Serilog.Sinks.Console`
     - `dotnet add App.Api/App.Api.csproj package MediatR`
@@ -66,10 +60,9 @@ This guide provides a comprehensive step-by-step approach to developing features
     - `dotnet add App.Api/App.Api.csproj package Microsoft.AspNetCore.Mvc.Versioning`
     - `dotnet add App.Api/App.Api.csproj package FluentValidation.AspNetCore`
     - **Note:** MediatR and authentication configurations are now handled through the generic module registration system.
-22. **Configure `App.Api` - Update `appsettings.json`:**
-    - Modify `App.Api/appsettings.json` and `App.Api/appsettings.Development.json` to include:
-        - `ConnectionStrings:MongoDB` (e.g., `"mongodb://admin:password@localhost:27017/AppDb?authSource=admin"`).
-        - `AdminSettings:AdminEmails` array (e.g., `["your.admin.email@gmail.com"]`).
+22. Configure `App.Api` - Update `appsettings.json`:
+    - Ensure `ConnectionStrings:PostgreSQL` exists.
+    - Ensure `JwtSettings` section exists (SecretKey, Issuer, Audience, ExpirationInHours).
 23. **Configure `App.Api` - Update `Program.cs`:**
     - Set up Serilog logging.
     - Register `IMongoClient` and `IMongoDatabase` as singletons.
@@ -86,9 +79,9 @@ This guide provides a comprehensive step-by-step approach to developing features
     - Configure API Versioning services.
     - **Note:** Module-specific configurations (JWT, MongoDB collections, MediatR handlers) are now automatically handled by each module's registration system.
 
-### Phase 2: Core User & Authentication Implementation ✅ COMPLETED
+### Phase 2: Core Authentication Implementation ✅ UPDATED
 
-**Status:** Phase 2 has been fully implemented with Clean Architecture refactoring and generic module registration system.
+Status: Identity module encapsulates ASP.NET Core Identity and issues JWTs. Policies: AdminOnly, UserOnly.
 
 1. **✅ Implement Users Module - Domain Layer (`App.Modules.Users.Domain`):**
     - ✅ Created `Entities` directory with `User.cs` and `UserMetric.cs` entities

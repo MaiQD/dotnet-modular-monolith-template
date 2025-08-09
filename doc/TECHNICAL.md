@@ -418,11 +418,10 @@ Phase 5 — Operations & hardening
 
 ## 6. Authentication and Authorization
 
-- **Authentication:** Handled exclusively via **Google OAuth 2.0**. Upon successful Google authentication, the backend issues a **JWT (JSON Web Token)** containing user identity and roles.
-- **Authorization:**
-    - **Role-Based Access Control (RBAC):** Users will have roles (e.g., "User", "Admin").
-    - **Policy-Based Authorization:** ASP.NET Core policies will enforce access rules (e.g., `[Authorize(Roles = "Admin")]` for admin functionalities; custom policies for data ownership like "users can only manage their own exercises").
-- **Admin Initiation:** The first admin account will be designated via a **Configuration/Environment Variable Whitelist**. Upon first login, if a user's Google email matches a whitelisted email, they will automatically be assigned the "Admin" role.
+ - Authentication: ASP.NET Core Identity module issues JWTs. Google OAuth can be added later via external logins.
+ - Authorization:
+   - Roles: Admin, User
+   - Policies: AdminOnly (requires Admin), UserOnly (requires User or Admin)
 
 ## 10. Onboarding Flow (Technical)
 

@@ -20,15 +20,6 @@ public static class ApplicationBuilderExtensions
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "App API v1");
                 c.RoutePrefix = string.Empty; // Serve Swagger UI at root URL
-                
-                // Configure OAuth2 settings for Google
-                var googleOAuthSettings = app.Services.GetRequiredService<IOptions<GoogleOAuthSettings>>().Value;
-                c.OAuthClientId(googleOAuthSettings.ClientId);
-                c.OAuthClientSecret(googleOAuthSettings.ClientSecret);
-                c.OAuthRealm("App");
-                c.OAuthAppName("App API");
-                c.OAuthScopeSeparator(" ");
-                c.OAuthUsePkce();
             });
         }
 

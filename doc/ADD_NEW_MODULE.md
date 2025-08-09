@@ -7,10 +7,9 @@ This guide walks you through creating a new module in the App modular monolith a
 ## 🎯 Module Architecture Overview
 
 Each module is a **vertical slice** that contains:
-- **Domain Layer**: Business entities, domain events, and repository interfaces
-- **Application Layer**: Commands, queries, DTOs, and mappers
-- **Infrastructure Layer**: Command/query handlers and repository implementations
-- **Tests**: Comprehensive test coverage for all layers
+- **Application Layer**: Commands, queries, DTOs, mappers, validators
+- **Infrastructure Layer**: EF DbContext, handlers, repositories, configuration
+- Optional **Domain Layer** if the module has rich domain models
 
 ## 📁 Module Structure Template
 
@@ -43,28 +42,21 @@ App.Modules.{ModuleName}/
 
 ### Step 1: Create Module Projects
 
-Create the four core projects for your module:
+Create the core projects for your module:
 
 ```bash
-# Create Domain project
-dotnet new classlib -n App.Modules.{ModuleName}.Domain
+# Create projects
 dotnet new classlib -n App.Modules.{ModuleName}.Application
 dotnet new classlib -n App.Modules.{ModuleName}.Infrastructure
-dotnet new xunit -n App.Modules.{ModuleName}.Tests
 ```
 
 ### Step 2: Set Up Project References
 
 ```bash
-# Domain project references
-dotnet add App.Modules.{ModuleName}.Domain/App.Modules.{ModuleName}.Domain.csproj reference App.SharedKernel/App.SharedKernel.csproj
-
 # Application project references
-dotnet add App.Modules.{ModuleName}.Application/App.Modules.{ModuleName}.Application.csproj reference App.Modules.{ModuleName}.Domain/App.Modules.{ModuleName}.Domain.csproj
 dotnet add App.Modules.{ModuleName}.Application/App.Modules.{ModuleName}.Application.csproj reference App.SharedKernel/App.SharedKernel.csproj
 
 # Infrastructure project references
-dotnet add App.Modules.{ModuleName}.Infrastructure/App.Modules.{ModuleName}.Infrastructure.csproj reference App.Modules.{ModuleName}.Domain/App.Modules.{ModuleName}.Domain.csproj
 dotnet add App.Modules.{ModuleName}.Infrastructure/App.Modules.{ModuleName}.Infrastructure.csproj reference App.Modules.{ModuleName}.Application/App.Modules.{ModuleName}.Application.csproj
 dotnet add App.Modules.{ModuleName}.Infrastructure/App.Modules.{ModuleName}.Infrastructure.csproj reference App.SharedKernel/App.SharedKernel.csproj
 
@@ -75,7 +67,7 @@ dotnet add App.Modules.{ModuleName}.Tests/App.Modules.{ModuleName}.Tests.csproj 
 dotnet add App.Modules.{ModuleName}.Tests/App.Modules.{ModuleName}.Tests.csproj reference App.SharedKernel/App.SharedKernel.csproj
 ```
 
-### Step 3: Add Required NuGet Packages
+### Step 3: Add Required NuGet Packages (EF + Identity if applicable)
 
 #### Domain Project
 ```xml
@@ -96,10 +88,10 @@ dotnet add App.Modules.{ModuleName}.Tests/App.Modules.{ModuleName}.Tests.csproj 
 #### Infrastructure Project
 ```xml
 <ItemGroup>
-    <PackageReference Include="MediatR" Version="12.2.0" />
-    <PackageReference Include="MongoDB.Driver" Version="2.23.1" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
+    <PackageReference Include="MediatR" Version="12.5.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.x" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.x" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.x" />
 </ItemGroup>
 ```
 
@@ -639,28 +631,11 @@ public class {ModuleName}Controller : ControllerBase
 }
 ```
 
-### Step 9: Configure MongoDB Indexes
+### Step 9: Configure EF Migrations
 
-```csharp
-// App.Modules.{ModuleName}.Infrastructure/Configuration/{ModuleName}IndexConfiguration.cs
-using MongoDB.Driver;
-
-namespace App.Modules.{ModuleName}.Infrastructure.Configuration;
-
-public static class {ModuleName}IndexConfiguration
-{
-    public static async Task ConfigureIndexes(IMongoDatabase database)
-    {
-        var collection = database.GetCollection<{EntityName}>("{entityNames}");
-
-        // Create indexes
-        var indexKeysDefinition = Builders<{EntityName}>.IndexKeys.Ascending(x => x.Name);
-        var indexOptions = new CreateIndexOptions { Unique = true };
-        var indexModel = new CreateIndexModel<{EntityName}>(indexKeysDefinition, indexOptions);
-
-        await collection.Indexes.CreateOneAsync(indexModel);
-    }
-}
+```bash
+dotnet ef migrations add Init --project Modules/{ModuleName}/App.Modules.{ModuleName}.Infrastructure/App.Modules.{ModuleName}.Infrastructure.csproj --startup-project App.Api/App.Api.csproj --context {ModuleDbContext}
+dotnet ef database update --startup-project App.Api/App.Api.csproj --context {ModuleDbContext}
 ```
 
 ## 🎯 Best Practices

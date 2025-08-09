@@ -77,11 +77,9 @@ App.ModularMonolith/
 │   └── Utilities/                    # Shared utilities
 │
 └── Modules/                          # 📦 Business Modules
-    ├── Users/                        # 👤 User Management Module
-    │   ├── App.Modules.Users.Domain/
-    │   ├── App.Modules.Users.Application/
-    │   ├── App.Modules.Users.Infrastructure/
-    │   └── App.Modules.Users.Tests/
+    ├── Identity/                     # 🔐 Authentication & Authorization Module
+    │   ├── App.Modules.Identity.Application/
+    │   └── App.Modules.Identity.Infrastructure/
     │
     ├── Exercises/                    # 💪 Exercise Management Module
     │   ├── App.Modules.Exercises.Domain/
@@ -207,7 +205,7 @@ The `ModuleRegistry` automatically discovers and registers all modules:
 // Zero-configuration module registration
 public static readonly string[] ModuleNames = 
 {
-    "Users",
+    "Identity",
     "Exercises", 
     "Routines",
     "WorkoutLogs"
