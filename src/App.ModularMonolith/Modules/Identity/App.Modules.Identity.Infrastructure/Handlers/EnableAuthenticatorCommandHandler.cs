@@ -1,6 +1,5 @@
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using App.Modules.Identity.Domain.Entities;
 using App.SharedKernel.Results;
 using App.Modules.Identity.Application.Commands;

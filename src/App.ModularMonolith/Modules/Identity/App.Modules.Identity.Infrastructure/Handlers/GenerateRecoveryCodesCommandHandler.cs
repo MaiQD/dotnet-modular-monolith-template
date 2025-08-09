@@ -21,7 +21,7 @@ public class GenerateRecoveryCodesCommandHandler : IRequestHandler<GenerateRecov
         var user = await _userManager.FindByIdAsync(request.UserId);
         if (user is null) return Result.Failure<RecoveryCodesDto>("User not found");
         var codes = await _userManager.GenerateNewTwoFactorRecoveryCodesAsync(user, request.Count);
-        return Result.Success(new RecoveryCodesDto { Codes = codes });
+        return Result.Success(new RecoveryCodesDto { Codes = codes! });
     }
 }
 

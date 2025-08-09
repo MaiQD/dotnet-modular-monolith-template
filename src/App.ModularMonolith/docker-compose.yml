@@ -21,10 +21,10 @@ services:
     container_name: app-modularmonolith-pgadmin
     restart: unless-stopped
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@local
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
       PGADMIN_DEFAULT_PASSWORD: admin
     ports:
-      - "8081:80"
+      - "8085:80"
     depends_on:
       - postgres
     networks:

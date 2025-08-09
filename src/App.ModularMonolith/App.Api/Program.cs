@@ -40,6 +40,9 @@ var app = builder.Build();
 // Apply EF Core migrations for all registered DbContexts
 RelationalDbInitializer.EnsureDatabasesCreated(app.Services, microsoftLogger);
 
+// Seed all modules via registry hook (no direct infra refs)
+await ModuleRegistry.SeedAllModuleData(app.Services);
+
 // Configure the application pipeline
 app.ConfigureSwaggerUi()
    .ConfigureCoreMiddleware()

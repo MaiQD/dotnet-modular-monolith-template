@@ -95,6 +95,11 @@ public static class IdentityInfrastructureModule
 
         return services;
     }
+
+    public static async Task SeedIdentityModuleData(IServiceProvider services)
+    {
+        await RoleSeeder.SeedAsync(services);
+    }
 }
 
 
