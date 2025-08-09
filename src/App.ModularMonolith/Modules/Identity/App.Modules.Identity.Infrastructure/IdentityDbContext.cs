@@ -20,6 +20,13 @@ public class IdentityDbContext : IdentityDbContext<AppUser, AppRole, Guid>
             b.HasIndex(x => x.TokenHash).IsUnique();
             b.HasIndex(x => new { x.UserId, x.ExpiresAtUtc });
         });
+
+        builder.Entity<IdentityAuditLog>(b =>
+        {
+            b.ToTable("IdentityAuditLogs");
+            b.HasKey(x => x.Id);
+            b.HasIndex(x => new { x.UserId, x.OccurredAtUtc });
+        });
     }
 }
 
