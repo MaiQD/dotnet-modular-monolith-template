@@ -63,18 +63,9 @@ public class LoginWithGoogleCommandHandler : IRequestHandler<LoginWithGoogleComm
                     GoogleId = payload.Subject,
                     Email = payload.Email,
                     DisplayName = payload.Name,
-                    LoginMethod = LoginMethod.Google,
-                    Roles = new List<string> { "User" },
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow
                 };
-
-                // Check if user should be admin
-                if (_adminSettings.AdminEmails.Contains(payload.Email))
-                {
-                    user.Roles.Add("Admin");
-                    _logger.LogInformation("Admin user created: {Email}", user.Email);
-                }
 
                 var createResult = await _userRepository.CreateAsync(user, cancellationToken);
                 if (createResult.IsFailure)
@@ -96,7 +87,6 @@ public class LoginWithGoogleCommandHandler : IRequestHandler<LoginWithGoogleComm
                 UserId = user.Id,
                 Email = user.Email,
                 DisplayName = user.DisplayName,
-                Roles = user.Roles.ToList(),
                 ExpiresAt = expiresAt
             };
 
@@ -122,12 +112,6 @@ public class LoginWithGoogleCommandHandler : IRequestHandler<LoginWithGoogleComm
             new(ClaimTypes.Name, user.DisplayName),
             new("GoogleId", user.GoogleId ?? string.Empty)
         };
-
-        // Add role claims
-        foreach (var role in user.Roles)
-        {
-            claims.Add(new Claim(ClaimTypes.Role, role));
-        }
 
         var token = new JwtSecurityToken(
             issuer: _jwtSettings.Issuer,

@@ -29,7 +29,8 @@ public class UserRepository : IUserRepository
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to create user with email {Email}. Error: {ErrorMessage}", user.Email, ex.Message);
+            _logger.LogError(ex, "Failed to create user with email {Email}. Error: {ErrorMessage}", user.Email,
+                ex.Message);
             return Result.Failure<User>($"Failed to create user: {ex.Message}");
         }
     }
@@ -39,8 +40,8 @@ public class UserRepository : IUserRepository
         try
         {
             var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
-            return user != null 
-                ? Result.Success(user) 
+            return user != null
+                ? Result.Success(user)
                 : Result.Failure<User>("User not found");
         }
         catch (Exception ex)
@@ -55,8 +56,8 @@ public class UserRepository : IUserRepository
         try
         {
             var user = await _db.Users.FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
-            return user != null 
-                ? Result.Success(user) 
+            return user != null
+                ? Result.Success(user)
                 : Result.Failure<User>("User not found");
         }
         catch (Exception ex)
@@ -71,13 +72,14 @@ public class UserRepository : IUserRepository
         try
         {
             var user = await _db.Users.FirstOrDefaultAsync(u => u.GoogleId == googleId, cancellationToken);
-            return user != null 
-                ? Result.Success(user) 
+            return user != null
+                ? Result.Success(user)
                 : Result.Failure<User>("User not found");
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to get user by Google ID {GoogleId}. Error: {ErrorMessage}", googleId, ex.Message);
+            _logger.LogError(ex, "Failed to get user by Google ID {GoogleId}. Error: {ErrorMessage}", googleId,
+                ex.Message);
             return Result.Failure<User>($"Failed to get user by Google ID: {ex.Message}");
         }
     }
@@ -124,7 +126,8 @@ public class UserRepository : IUserRepository
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to check user existence for ID {UserId}. Error: {ErrorMessage}", id, ex.Message);
+            _logger.LogError(ex, "Failed to check user existence for ID {UserId}. Error: {ErrorMessage}", id,
+                ex.Message);
             return Result.Failure<bool>($"Failed to check user existence: {ex.Message}");
         }
     }
@@ -138,12 +141,14 @@ public class UserRepository : IUserRepository
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to check email existence for {Email}. Error: {ErrorMessage}", email, ex.Message);
+            _logger.LogError(ex, "Failed to check email existence for {Email}. Error: {ErrorMessage}", email,
+                ex.Message);
             return Result.Failure<bool>($"Failed to check email existence: {ex.Message}");
         }
     }
 
-    public async Task<Result<IEnumerable<User>>> GetAllAsync(int skip = 0, int take = 50, CancellationToken cancellationToken = default)
+    public async Task<Result<IEnumerable<User>>> GetAllAsync(int skip = 0, int take = 50,
+        CancellationToken cancellationToken = default)
     {
         try
         {
@@ -153,12 +158,13 @@ public class UserRepository : IUserRepository
                 .Skip(skip)
                 .Take(take)
                 .ToListAsync(cancellationToken);
-            
+
             return Result.Success(users.AsEnumerable());
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to get all users with skip {Skip} and take {Take}. Error: {ErrorMessage}", skip, take, ex.Message);
+            _logger.LogError(ex, "Failed to get all users with skip {Skip} and take {Take}. Error: {ErrorMessage}",
+                skip, take, ex.Message);
             return Result.Failure<IEnumerable<User>>($"Failed to get all users: {ex.Message}");
         }
     }
@@ -174,23 +180,6 @@ public class UserRepository : IUserRepository
         {
             _logger.LogError(ex, "Failed to get user count. Error: {ErrorMessage}", ex.Message);
             return Result.Failure<long>($"Failed to get user count: {ex.Message}");
-        }
-    }
-
-    public async Task<Result<IEnumerable<User>>> GetByRoleAsync(string role, CancellationToken cancellationToken = default)
-    {
-        try
-        {
-            var users = await _db.Users
-                .AsNoTracking()
-                .Where(u => u.Roles.Contains(role))
-                .ToListAsync(cancellationToken);
-            return Result.Success(users.AsEnumerable());
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Failed to get users by role {Role}. Error: {ErrorMessage}", role, ex.Message);
-            return Result.Failure<IEnumerable<User>>($"Failed to get users by role: {ex.Message}");
         }
     }
 }

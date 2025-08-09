@@ -71,8 +71,8 @@ public static class ModuleConfigurationValidator
             // Validate module-specific settings based on module name
             switch (moduleName.ToLowerInvariant())
             {
-                case "users":
-                    ValidateUsersModuleConfiguration(moduleSection, result, logger);
+                case "identity":
+                    ValidateIdentityModuleConfiguration(configuration, result, logger);
                     break;
                 case "exercises":
                     ValidateExercisesModuleConfiguration(moduleSection, result, logger);
@@ -96,17 +96,14 @@ public static class ModuleConfigurationValidator
         return result;
     }
 
-    /// <summary>
-    /// Validates Users module specific configuration
-    /// </summary>
-    private static void ValidateUsersModuleConfiguration(IConfigurationSection moduleSection, ModuleValidationResult result, ILogger logger)
+    private static void ValidateIdentityModuleConfiguration(IConfiguration configuration, ModuleValidationResult result, ILogger logger)
     {
-        // Validate JWT settings
-        var jwtSection = moduleSection.GetSection("JwtSettings");
+        // JWT settings are at root (JwtSettings)
+        var jwtSection = configuration.GetSection("JwtSettings");
         if (!jwtSection.Exists())
         {
-            result.AddError("JWT settings not found for Users module");
-            logger.LogWarning("JWT settings not found for Users module");
+            result.AddError("JwtSettings section not found");
+            logger.LogWarning("JwtSettings section not found");
         }
         else
         {
@@ -115,18 +112,10 @@ public static class ModuleConfigurationValidator
             {
                 if (string.IsNullOrEmpty(jwtSection[setting]))
                 {
-                    result.AddError($"JWT setting '{setting}' is missing or empty");
-                    logger.LogWarning("JWT setting missing: {Setting}", setting);
+                    result.AddError($"JwtSettings:{setting} is missing or empty");
+                    logger.LogWarning("Jwt setting missing: {Setting}", setting);
                 }
             }
-        }
-
-        // Validate Admin settings
-        var adminSection = moduleSection.GetSection("AdminSettings");
-        if (!adminSection.Exists())
-        {
-            result.AddWarning("Admin settings not found for Users module (optional)");
-            logger.LogDebug("Admin settings not found for Users module (optional)");
         }
     }
 

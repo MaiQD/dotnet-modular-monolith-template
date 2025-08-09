@@ -16,15 +16,7 @@ public class UserDto
     
     public string? GoogleId { get; set; }
     
-    public string LoginMethod { get; set; } = string.Empty;
-    
-    public List<string> Roles { get; set; } = new();
-    
-    public string? Gender { get; set; }
-    
     public DateTime? DateOfBirth { get; set; }
-    
-    public string UnitPreference { get; set; } = "Metric";
     
     public DateTime CreatedAt { get; set; }
     

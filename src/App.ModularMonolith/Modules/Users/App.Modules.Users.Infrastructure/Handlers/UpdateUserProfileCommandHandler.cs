@@ -45,10 +45,7 @@ public class UpdateUserProfileCommandHandler : IRequestHandler<UpdateUserProfile
                 user.DisplayName = request.DisplayName;
             }
             
-            user.Gender = string.IsNullOrEmpty(request.Gender) ? null : 
-                Enum.Parse<Gender>(request.Gender);
             user.DateOfBirth = request.DateOfBirth;
-            user.UnitPreference = Enum.Parse<UnitPreference>(request.UnitPreference);
             user.UpdatedAt = DateTime.UtcNow;
 
             // Save changes

@@ -18,6 +18,7 @@ builder.Services.Configure<GoogleOAuthSettings>(builder.Configuration.GetSection
 
 // Add core API services
 builder.Services.AddCoreApiServices();
+builder.Services.AddAuthorizationPolicies();
 
 // Add Swagger with OAuth2 support
 builder.Services.AddSwaggerWithOAuth();
@@ -36,8 +37,11 @@ builder.Services.AddModuleServices(builder.Configuration, microsoftLogger);
 
 var app = builder.Build();
 
-// Ensure EF Core databases are created (template-friendly; swap to migrations for production)
+// Apply EF Core migrations for all registered DbContexts
 RelationalDbInitializer.EnsureDatabasesCreated(app.Services, microsoftLogger);
+
+// Seed all modules via registry hook (no direct infra refs)
+await ModuleRegistry.SeedAllModuleData(app.Services);
 
 // Configure the application pipeline
 app.ConfigureSwaggerUi()

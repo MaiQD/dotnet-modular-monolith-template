@@ -33,12 +33,12 @@ public static class RelationalDbInitializer
                 var ctx = sp.GetService(dbContextType) as DbContext;
                 if (ctx == null) continue; // Not registered in DI
 
-                logger.LogInformation("Ensuring database created for DbContext: {DbContext}", dbContextType.FullName);
-                ctx.Database.EnsureCreated();
+                logger.LogInformation("Applying migrations for DbContext: {DbContext}", dbContextType.FullName);
+                ctx.Database.Migrate();
             }
             catch (Exception ex)
             {
-                logger.LogWarning(ex, "Failed to ensure database for DbContext: {DbContext}", dbContextType.FullName);
+                logger.LogWarning(ex, "Failed to apply migrations for DbContext: {DbContext}", dbContextType.FullName);
             }
         }
     }

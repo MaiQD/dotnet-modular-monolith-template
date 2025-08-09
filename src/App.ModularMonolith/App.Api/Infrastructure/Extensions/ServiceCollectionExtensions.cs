@@ -32,6 +32,16 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
+    public static IServiceCollection AddAuthorizationPolicies(this IServiceCollection services)
+    {
+        services.AddAuthorization(options =>
+        {
+            options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+            options.AddPolicy("UserOnly", policy => policy.RequireRole("User", "Admin"));
+        });
+        return services;
+    }
+
     /// <summary>
     /// Adds Swagger/OpenAPI services with OAuth2 and Bearer token authentication
     /// </summary>
