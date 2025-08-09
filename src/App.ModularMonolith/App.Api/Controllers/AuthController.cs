@@ -1,10 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using App.Modules.Identity.Domain.Entities;
-using App.Modules.Identity.Application.Abstractions;
+using MediatR;
 using App.Modules.Identity.Application.DTOs;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+using App.Modules.Identity.Application.Commands;
 
 namespace App.Api.Controllers;
 
@@ -13,58 +11,44 @@ namespace App.Api.Controllers;
 [Route("api/v{version:apiVersion}/auth")] 
 public class AuthController : ControllerBase
 {
-    private readonly UserManager<AppUser> _userManager;
-    private readonly IIdentityService _identityService;
-    private readonly IRefreshTokenService _refreshTokenService;
+    private readonly IMediator _mediator;
 
-    public AuthController(UserManager<AppUser> userManager, IIdentityService identityService, IRefreshTokenService refreshTokenService)
+    public AuthController(IMediator mediator)
     {
-        _userManager = userManager;
-        _identityService = identityService;
-        _refreshTokenService = refreshTokenService;
+        _mediator = mediator;
     }
 
     [HttpPost("register")]
     [AllowAnonymous]
     public async Task<IActionResult> Register([FromBody] RegisterRequestDto request, CancellationToken ct)
     {
-        var user = new AppUser { Id = Guid.NewGuid(), UserName = request.Email, Email = request.Email, DisplayName = request.DisplayName };
-        var result = await _userManager.CreateAsync(user, request.Password);
-        if (!result.Succeeded) return BadRequest(new { errors = result.Errors.Select(e => e.Description) });
-        await _userManager.AddToRoleAsync(user, App.Modules.Identity.Domain.Roles.IdentityRoles.User);
-        return Ok();
+        var command = new RegisterUserCommand { Email = request.Email, Password = request.Password, DisplayName = request.DisplayName };
+        var result = await _mediator.Send(command, ct);
+        return result.IsSuccess ? Ok() : BadRequest(new { error = result.Error });
     }
 
     [HttpPost("login")]
     [AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] LoginRequestDto request, CancellationToken ct)
     {
-        var user = await _userManager.FindByEmailAsync(request.Email);
-        if (user is null) return Unauthorized();
-        var correct = await _userManager.CheckPasswordAsync(user, request.Password);
-        if (!correct) return Unauthorized();
-
-        var roles = await _userManager.GetRolesAsync(user);
-        var extraClaims = roles.Select(r => new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Role, r));
-        var (accessToken, refreshToken) = await _refreshTokenService.IssueAsync(user.Id, user.Email!, user.DisplayName, extraClaims, ct);
-        return Ok(new { accessToken, refreshToken });
+        var result = await _mediator.Send(new LoginWithPasswordCommand { Email = request.Email, Password = request.Password }, ct);
+        return result.IsSuccess ? Ok(result.Value) : Unauthorized(new { error = result.Error });
     }
 
     [HttpPost("refresh")]
     [AllowAnonymous]
-    public async Task<IActionResult> Refresh([FromBody, BindRequired] string refreshToken, CancellationToken ct)
+    public async Task<IActionResult> Refresh([FromBody] string refreshToken, CancellationToken ct)
     {
-        var rotated = await _refreshTokenService.RotateAsync(refreshToken, ct);
-        if (rotated is null) return Unauthorized();
-        return Ok(new { accessToken = rotated.Value.accessToken, refreshToken = rotated.Value.refreshToken });
+        var result = await _mediator.Send(new RotateRefreshTokenCommand { RefreshToken = refreshToken }, ct);
+        return result.IsSuccess ? Ok(result.Value) : Unauthorized(new { error = result.Error });
     }
 
     [HttpPost("revoke")]
     [Authorize]
-    public async Task<IActionResult> Revoke([FromBody, BindRequired] string refreshToken, CancellationToken ct)
+    public async Task<IActionResult> Revoke([FromBody] string refreshToken, CancellationToken ct)
     {
-        await _refreshTokenService.RevokeAsync(refreshToken, ct);
-        return NoContent();
+        var result = await _mediator.Send(new RevokeRefreshTokenCommand { RefreshToken = refreshToken }, ct);
+        return result.IsSuccess ? NoContent() : BadRequest(new { error = result.Error });
     }
 }
 
