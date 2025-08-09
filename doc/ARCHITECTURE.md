@@ -78,6 +78,7 @@ App.ModularMonolith/
 │
 └── Modules/                          # 📦 Business Modules
     ├── Identity/                     # 🔐 Authentication & Authorization Module
+    │   ├── App.Modules.Identity.Domain/
     │   ├── App.Modules.Identity.Application/
     │   └── App.Modules.Identity.Infrastructure/
     │

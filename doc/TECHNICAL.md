@@ -418,10 +418,42 @@ Phase 5 — Operations & hardening
 
 ## 6. Authentication and Authorization
 
- - Authentication: ASP.NET Core Identity module issues JWTs. Google OAuth can be added later via external logins.
- - Authorization:
-   - Roles: Admin, User
-   - Policies: AdminOnly (requires Admin), UserOnly (requires User or Admin)
+- Authentication: ASP.NET Core Identity (separate `Identity` module) issues JWTs. Google OAuth can be added later via external logins.
+- Authorization:
+  - Roles: Admin, User
+  - Policies: AdminOnly (Admin), UserOnly (User or Admin)
+- Tokens:
+  - Access token (JWT) + Refresh token (30 days, rotation + revocation)
+  - Security-stamp validation on each JWT via `JwtBearerEvents.OnTokenValidated`
+- Advanced features:
+  - Email confirmation, password reset (token providers)
+  - 2FA (authenticator), recovery codes, remember-machine supportable
+  - Lockout options enabled; audit logs persisted (`IdentityAuditLogs`)
+
+### Identity Endpoints (v1)
+- POST `/api/v1/auth/register`
+- POST `/api/v1/auth/login`
+- POST `/api/v1/auth/refresh`
+- POST `/api/v1/auth/revoke`
+- POST `/api/v1/auth/send-confirmation`
+- POST `/api/v1/auth/confirm-email?userId=...&token=...`
+- POST `/api/v1/auth/request-password-reset`
+- POST `/api/v1/auth/reset-password`
+- POST `/api/v1/auth/2fa/enable`
+- POST `/api/v1/auth/2fa/verify`
+- POST `/api/v1/auth/2fa/recovery-codes`
+
+### Seeding & Migrations
+- Auto-migrations: On startup we call `Database.Migrate()` for all registered `DbContext`s.
+- Seeding: Use module hook `ModuleRegistry.SeedAllModuleData(app.Services)`; the `Identity` module seeds roles (Admin, User). No direct Infrastructure references from API.
+- Design-time migrations (Identity):
+  - Design-time factory in `Identity.Infrastructure` enables scaffolding without loading API
+  - Create: `dotnet ef migrations add InitIdentity --project Modules/Identity/App.Modules.Identity.Infrastructure/App.Modules.Identity.Infrastructure.csproj --context IdentityDbContext`
+  - Update: `dotnet ef database update --project Modules/Identity/App.Modules.Identity.Infrastructure/App.Modules.Identity.Infrastructure.csproj --context IdentityDbContext`
+
+### Email Abstraction
+- `IEmailSender` lives in `App.SharedKernel/Interfaces`.
+- Concrete implementation registered by a module (currently logging sender). Swap with SMTP/SendGrid in a future `Notifications` module.
 
 ## 10. Onboarding Flow (Technical)
 
